@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>旅遊路徑示意圖 · Bernie & Nydia 東京旅行</title>
+<style>
+  :root {
+    --pink: #ff8aae; --pink-soft: #ffd6e3; --pink-bg: #fff5f8;
+    --ink: #4a3b44; --muted: #9a8a92; --card: #ffffff; --line: #f0dde5;
+    --d23:#f4a261; --d24:#2a9d8f; --d25:#2a9d8f; --d26:#e76f9b;
+    --d27:#9b6dd6; --d28:#4d96ff; --d29:#f4a261;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+    background: linear-gradient(160deg, var(--pink-bg), #fdf0f5 60%, #eef7fb);
+    color: var(--ink); line-height: 1.7; padding-bottom: 50px;
+  }
+  header {
+    text-align: center; padding: 36px 20px 26px;
+    background: linear-gradient(135deg, var(--pink), #ffb3c8); color: #fff;
+    box-shadow: 0 6px 24px rgba(255,138,174,.35);
+    border-bottom-left-radius: 28px; border-bottom-right-radius: 28px;
+  }
+  header h1 { font-size: 1.6rem; letter-spacing: 1px; }
+  header .meta { margin-top: 8px; font-size: .92rem; opacity: .95; }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 0 16px; }
+  .back {
+    display: inline-flex; align-items: center; gap: 6px; margin: 20px 0 4px;
+    text-decoration: none; color: var(--pink); font-weight: 700; font-size: .95rem;
+    background: #fff; padding: 8px 16px; border-radius: 18px; border: 1.5px solid var(--pink-soft);
+  }
+  .back:hover { background: var(--pink); color: #fff; }
+  h2.block { margin: 28px 0 14px; font-size: 1.3rem; color: var(--pink); }
+  .map-card {
+    background: var(--card); border-radius: 20px; padding: 16px; border: 1px solid var(--line);
+    box-shadow: 0 4px 18px rgba(180,140,160,.12); overflow-x: auto;
+  }
+  svg { display: block; width: 100%; height: auto; min-width: 560px; }
+  .legend {
+    display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0 0; justify-content: center;
+  }
+  .legend span {
+    display: inline-flex; align-items: center; gap: 6px; font-size: .82rem;
+    background: #fff; padding: 5px 12px; border-radius: 16px; border: 1px solid var(--line);
+  }
+  .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+  .day-route {
+    background: var(--card); border-radius: 16px; padding: 14px 18px; margin: 12px 0;
+    border: 1px solid var(--line); border-left: 6px solid var(--pink);
+    box-shadow: 0 3px 14px rgba(180,140,160,.1);
+  }
+  .day-route h3 { font-size: 1rem; display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .day-route .tag { color:#fff; font-size:.72rem; padding:2px 9px; border-radius:11px; font-weight:600; }
+  .path-text { font-size: .92rem; color: var(--ink); }
+  .path-text .arr { color: var(--muted); margin: 0 5px; }
+  .hotel { font-size: .82rem; color: var(--muted); margin-top: 4px; }
+  .scroll-hint { display:none; font-size:.75rem; color:var(--muted); text-align:center; margin-bottom:8px; }
+  footer { text-align:center; margin-top:34px; color:var(--muted); font-size:.85rem; }
+  @media (max-width: 640px) {
+    header h1 { font-size: 1.3rem; }
+    .wrap { padding: 0 12px; }
+    .scroll-hint { display:block; }
+    .day-route { padding: 12px 14px; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>🗺️ 旅遊路徑示意圖</h1>
+  <div class="meta">Bernie &amp; Nydia 東京旅行 ｜ 6/23 ~ 6/29</div>
+</header>
+
+<div class="wrap">
+  <a class="back" href="index.html">← 回行程手札</a>
+  <a class="back" href="map.html" style="margin-left:8px;border-color:#4d96ff;color:#4d96ff;">🗾 真實互動地圖</a>
+  <a class="back" href="transit.html" style="margin-left:8px;border-color:#2f8f4e;color:#2f8f4e;">🚃 交通</a>
+
+  <h2 class="block">整趟動線概覽</h2>
+  <div class="map-card">
+    <div class="scroll-hint">← 圖可左右滑動 →</div>
+    <svg viewBox="0 0 800 560" xmlns="http://www.w3.org/2000/svg" font-family="inherit">
+      <defs>
+        <marker id="arrow" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L6,3 L0,6 z" fill="#b7a3ad"/>
+        </marker>
+      </defs>
+
+      <!-- 區域底圖標示 -->
+      <rect x="0" y="0" width="800" height="560" fill="#fbf6f8" rx="16"/>
+      <text x="400" y="30" text-anchor="middle" font-size="13" fill="#bbabb3" opacity="0.7">（示意圖・非實際比例，僅表達移動順序與相對方位）</text>
+
+      <!-- 區域圈：鎌倉江之島(西南) / 東京市區(中) / 成田(東) -->
+      <ellipse cx="170" cy="430" rx="135" ry="92" fill="#e8f5f3" stroke="#bfe3dd" stroke-dasharray="5 4"/>
+      <text x="170" y="528" text-anchor="middle" font-size="13" fill="#2a9d8f" font-weight="700">鎌倉・江之島（西南）</text>
+
+      <ellipse cx="430" cy="250" rx="215" ry="150" fill="#fdeef4" stroke="#f3c8da" stroke-dasharray="5 4"/>
+      <text x="430" y="118" text-anchor="middle" font-size="13" fill="#e76f9b" font-weight="700">東京市區</text>
+
+      <ellipse cx="710" cy="170" rx="78" ry="70" fill="#fdf0e6" stroke="#f4cda3" stroke-dasharray="5 4"/>
+      <text x="710" y="92" text-anchor="middle" font-size="13" fill="#d98a3c" font-weight="700">成田（東）</text>
+
+      <!-- ===== 路徑線（依日期順序） ===== -->
+      <!-- 6/23 成田機場 → 上野 -->
+      <path d="M710,150 C560,120 480,150 360,200" fill="none" stroke="var(--d23)" stroke-width="3.5" stroke-linecap="round" marker-end="url(#arrow)"/>
+      <!-- 6/24 上野 → 鎌倉江之島 -->
+      <path d="M345,210 C260,290 210,330 185,355" fill="none" stroke="var(--d24)" stroke-width="3.5" stroke-linecap="round" marker-end="url(#arrow)"/>
+      <!-- 6/26 江之島 → 東京市區(銀座台場) -->
+      <path d="M215,400 C320,370 420,330 500,300" fill="none" stroke="var(--d26)" stroke-width="3.5" stroke-linecap="round" marker-end="url(#arrow)"/>
+      <!-- 6/27 市區內(代官山澀谷六本木) 環線 -->
+      <path d="M430,300 C360,330 350,250 415,235" fill="none" stroke="var(--d27)" stroke-width="3.5" stroke-linecap="round" marker-end="url(#arrow)"/>
+      <!-- 6/28 市區(淺草上野世田谷) → 成田 -->
+      <path d="M470,235 C600,210 650,185 690,180" fill="none" stroke="var(--d28)" stroke-width="3.5" stroke-linecap="round" marker-end="url(#arrow)"/>
+      <!-- 6/29 成田 → 機場離境 -->
+      <path d="M710,200 C725,250 730,300 720,350" fill="none" stroke="var(--d29)" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="2 6" marker-end="url(#arrow)"/>
+      <text x="748" y="360" font-size="12" fill="var(--d29)">✈ 回家</text>
+
+      <!-- ===== 節點 ===== -->
+      <!-- 成田機場 -->
+      <circle cx="712" cy="148" r="11" fill="var(--d23)"/>
+      <text x="712" y="135" text-anchor="middle" font-size="12" font-weight="700" fill="#7a5a3a">✈ 成田機場</text>
+
+      <!-- 上野(首晚) -->
+      <circle cx="350" cy="205" r="11" fill="var(--d23)"/>
+      <text x="350" y="190" text-anchor="middle" font-size="12" font-weight="700" fill="#4a3b44">🏨 上野（首晚）</text>
+
+      <!-- 鎌倉江之島(2晚) -->
+      <circle cx="180" cy="360" r="13" fill="var(--d24)"/>
+      <text x="180" y="345" text-anchor="middle" font-size="12" font-weight="700" fill="#1f6f64">🏨 江之島 Raku（2 晚）</text>
+      <text x="180" y="408" text-anchor="middle" font-size="11" fill="#2a9d8f">鎌倉・七里濱・江之島</text>
+
+      <!-- 銀座/台場 -->
+      <circle cx="505" cy="300" r="10" fill="var(--d26)"/>
+      <text x="505" y="320" text-anchor="middle" font-size="12" font-weight="700" fill="#b14b73">銀座・築地・台場</text>
+
+      <!-- 代官山/澀谷/六本木 -->
+      <circle cx="430" cy="302" r="10" fill="var(--d27)"/>
+      <text x="408" y="345" text-anchor="middle" font-size="12" font-weight="700" fill="#6b3fa0">代官山・澀谷・六本木</text>
+
+      <!-- 淺草/上野/世田谷 -->
+      <circle cx="440" cy="232" r="10" fill="var(--d28)"/>
+      <text x="430" y="218" text-anchor="middle" font-size="12" font-weight="700" fill="#2f5fb0">上野・淺草・世田谷・東京鐵塔</text>
+
+      <!-- 成田(末晚) -->
+      <circle cx="710" cy="200" r="11" fill="var(--d28)"/>
+      <text x="710" y="225" text-anchor="middle" font-size="12" font-weight="700" fill="#2f5fb0">🏨 成田（末晚）</text>
+    </svg>
+
+    <div class="legend">
+      <span><i class="dot" style="background:var(--d23)"></i>6/23・29 移動日</span>
+      <span><i class="dot" style="background:var(--d24)"></i>6/24–25 鎌倉江之島</span>
+      <span><i class="dot" style="background:var(--d26)"></i>6/26 銀座台場</span>
+      <span><i class="dot" style="background:var(--d27)"></i>6/27 摩登夜景</span>
+      <span><i class="dot" style="background:var(--d28)"></i>6/28 經典景點</span>
+    </div>
+  </div>
+
+  <h2 class="block">每日路線</h2>
+
+  <div class="day-route" style="border-left-color:var(--d23)">
+    <h3><span class="tag" style="background:var(--d23)">6/23 二</span>抵達東京</h3>
+    <div class="path-text">✈ 成田機場 <span class="arr">→</span> N'EX／利木津巴士 <span class="arr">→</span> 上野</div>
+    <div class="hotel">🏨 上野站南 APA 飯店</div>
+  </div>
+
+  <div class="day-route" style="border-left-color:var(--d24)">
+    <h3><span class="tag" style="background:var(--d24)">6/24 三</span>鎌倉・江之島 DAY 1</h3>
+    <div class="path-text">上野 <span class="arr">→</span> 鎌倉 <span class="arr">→</span> 鎌倉高校前 <span class="arr">→</span> 小町通 <span class="arr">→</span> 七里濱 <span class="arr">→</span> 江之島（夕陽）</div>
+    <div class="hotel">🏨 江之島 Raku（片瀨海岸）</div>
+  </div>
+
+  <div class="day-route" style="border-left-color:var(--d25)">
+    <h3><span class="tag" style="background:var(--d25)">6/25 四</span>鎌倉・江之島 DAY 2</h3>
+    <div class="path-text">Raku <span class="arr">→</span> 熊見亭 <span class="arr">→</span> 江之島散策 <span class="arr">→</span> 七里濱 <span class="arr">→</span> 小町通</div>
+    <div class="hotel">🏨 江之島 Raku（片瀨海岸）</div>
+  </div>
+
+  <div class="day-route" style="border-left-color:var(--d26)">
+    <h3><span class="tag" style="background:var(--d26)">6/26 五</span>銀座美食・台場夜景</h3>
+    <div class="path-text">江之島 <span class="arr">→</span> 銀座（敘敘苑）<span class="arr">→</span> 築地場外市場 <span class="arr">→</span> 台場（夜景）</div>
+    <div class="hotel">🏨 東京市區（押上／淺草建議）</div>
+  </div>
+
+  <div class="day-route" style="border-left-color:var(--d27)">
+    <h3><span class="tag" style="background:var(--d27)">6/27 六</span>摩登東京・夜景巡禮</h3>
+    <div class="path-text">代官山 <span class="arr">→</span> Stellar Garden <span class="arr">→</span> 澀谷 SKY <span class="arr">→</span> 下北澤 <span class="arr">→</span> 六本木展望台</div>
+    <div class="hotel">🏨 東京市區（押上／淺草建議）</div>
+  </div>
+
+  <div class="day-route" style="border-left-color:var(--d28)">
+    <h3><span class="tag" style="background:var(--d28)">6/28 日</span>經典景點・文青散步</h3>
+    <div class="path-text">teamLab Borderless（麻布台）<span class="arr">→</span> 上野公園 <span class="arr">→</span> 秋葉原 <span class="arr">→</span> 淺草寺 <span class="arr">→</span> 摩利支天德大寺 <span class="arr">→</span> 豪德寺 <span class="arr">→</span> 東京鐵塔 <span class="arr">→</span> 成田</div>
+    <div class="hotel">🏨 成田東武機場酒店</div>
+  </div>
+
+  <div class="day-route" style="border-left-color:var(--d29)">
+    <h3><span class="tag" style="background:var(--d29)">6/29 一</span>回家</h3>
+    <div class="path-text">成田東武機場酒店 <span class="arr">→</span> 成田機場 <span class="arr">→</span> ✈ 離境</div>
+  </div>
+
+  <h2 class="block">🔗 互動地圖</h2>
+  <div class="map-card" style="overflow:visible;">
+    <p style="font-size:.92rem;">想看實際相對位置，可開啟 Nydia 的完整 Google 地圖清單：</p>
+    <p style="margin-top:10px;">
+      <a class="back" style="margin:0;" href="https://www.google.com/maps/@35.5110201,139.3077958,10z/data=!4m2!11m1!2sZt10yFdt_cbtEA8Ixde_tg" target="_blank">🗺️ 開啟 Google 地圖清單（19 個地點）</a>
+    </p>
+  </div>
+
+  <footer>Bernie &amp; Nydia · 東京旅行手札 · 路徑示意圖 💕</footer>
+</div>
+</body>
+</html>
