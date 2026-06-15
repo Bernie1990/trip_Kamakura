@@ -4,86 +4,36 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bernie & Nydia 東京旅行手札 ✈️</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+<link rel="stylesheet" href="style.css">
 <style>
-  :root {
-    --pink: #ff8aae;
-    --pink-soft: #ffd6e3;
-    --pink-bg: #fff5f8;
-    --ink: #4a3b44;
-    --muted: #9a8a92;
-    --card: #ffffff;
-    --line: #f0dde5;
-    --accent: #7ec8e3;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: -apple-system, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
-    background: linear-gradient(160deg, var(--pink-bg), #fdf0f5 60%, #eef7fb);
-    color: var(--ink);
-    line-height: 1.7;
-    padding: 0 0 60px;
-  }
-  header {
-    text-align: center;
-    padding: 48px 20px 36px;
-    background: linear-gradient(135deg, var(--pink), #ffb3c8);
-    color: #fff;
-    box-shadow: 0 6px 24px rgba(255,138,174,.35);
-    border-bottom-left-radius: 32px;
-    border-bottom-right-radius: 32px;
-  }
-  header h1 { font-size: 2rem; letter-spacing: 1px; }
-  header .meta { margin-top: 12px; font-size: .98rem; opacity: .95; }
-  header .theme {
-    margin-top: 14px; display: inline-flex; flex-wrap: wrap; gap: 8px; justify-content: center;
-  }
-  header .theme span {
-    background: rgba(255,255,255,.25); padding: 4px 12px; border-radius: 20px; font-size: .85rem;
-    backdrop-filter: blur(4px);
-  }
-  .wrap { max-width: 860px; margin: 0 auto; padding: 0 18px; }
-  nav.days {
-    display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
-    margin: 28px 0 8px; position: sticky; top: 0; z-index: 20;
-    background: rgba(255,245,248,.9); backdrop-filter: blur(8px);
-    padding: 12px; border-radius: 16px;
-  }
-  nav.days a {
-    text-decoration: none; color: var(--pink); border: 1.5px solid var(--pink-soft);
-    padding: 6px 12px; border-radius: 18px; font-size: .85rem; font-weight: 600;
-    transition: .2s; background: #fff;
-  }
-  nav.days a:hover { background: var(--pink); color: #fff; transform: translateY(-2px); }
-  section.day {
-    background: var(--card); margin: 22px 0; border-radius: 20px; overflow: hidden;
-    box-shadow: 0 4px 18px rgba(180,140,160,.12); border: 1px solid var(--line);
-  }
-  .day-head {
-    padding: 16px 22px; background: linear-gradient(90deg, var(--pink-soft), #fff0);
-    font-weight: 700; font-size: 1.15rem; display: flex; align-items: center; gap: 10px;
-  }
-  .day-head .date-tag {
-    background: var(--pink); color: #fff; font-size: .78rem; padding: 3px 10px;
-    border-radius: 12px; font-weight: 600;
-  }
+  /* ===== 行程表 ===== */
+  section.day { background: var(--card); margin: 0 0 18px; border-radius: 18px; overflow: hidden;
+    box-shadow: 0 4px 16px rgba(180,140,160,.12); border: 1px solid var(--line); }
+  .day-head { padding: 14px 18px; background: linear-gradient(90deg, var(--pink-soft), #fff0);
+    font-weight: 700; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; }
+  .day-head .date-tag { background: var(--pink); color: #fff; font-size: .78rem; padding: 3px 10px; border-radius: 12px; }
   table { width: 100%; border-collapse: collapse; }
-  td { padding: 11px 22px; border-top: 1px solid var(--line); vertical-align: top; }
-  td.time { color: var(--pink); font-weight: 700; white-space: nowrap; width: 70px; font-variant-numeric: tabular-nums; }
-  td.act { width: auto; }
-  td.map { text-align: right; white-space: nowrap; width: 50px; }
-  td.map a { text-decoration: none; font-size: 1.1rem; }
-  .note {
-    margin: 4px 22px 16px; padding: 10px 14px; background: #fff8e6; border-left: 4px solid #ffd479;
-    border-radius: 8px; font-size: .9rem; color: #8a7340;
+  td { padding: 11px 18px; border-top: 1px solid var(--line); vertical-align: top; }
+  td.time { color: var(--pink); font-weight: 700; white-space: nowrap; width: 64px; font-variant-numeric: tabular-nums; }
+  td.map { text-align: right; white-space: nowrap; width: 44px; }
+  td.map a { text-decoration: none; font-size: 1.1rem; display: inline-block; }
+  td.map a.route-ico { font-size: .98rem; margin-top: 3px; }
+  td.map a.route-ico:hover { filter: brightness(1.1); }
+  .note { margin: 4px 0 16px; padding: 10px 14px; background: #fff8e6; border-left: 4px solid #ffd479;
+    border-radius: 8px; font-size: .9rem; color: #8a7340; }
+  .pill { display:inline-block; background:var(--pink-soft); color:var(--ink); padding:2px 10px; border-radius:12px; font-size:.78rem; margin-left:6px; }
+  .day-link {
+    display:inline-flex; align-items:center; gap:6px; margin: 2px 0 18px;
+    text-decoration:none; font-size:.86rem; font-weight:700; color:var(--green);
+    background:#eafaef; border:1.5px solid #bfe6cc; padding:7px 14px; border-radius:14px; transition:.15s;
   }
-  h2.block {
-    margin: 40px 0 14px; font-size: 1.35rem; color: var(--pink);
-    display: flex; align-items: center; gap: 8px;
-  }
-  .card {
-    background: var(--card); border-radius: 18px; padding: 20px 24px; border: 1px solid var(--line);
-    box-shadow: 0 4px 18px rgba(180,140,160,.1);
-  }
+  .day-link:hover { background:var(--green); color:#fff; border-color:var(--green); }
+
+  /* ===== 卡片／清單／表格 ===== */
+  .card { background: var(--card); border-radius: 18px; padding: 20px 24px; border: 1px solid var(--line);
+    box-shadow: 0 4px 18px rgba(180,140,160,.1); }
   .compare-table { width: 100%; border-collapse: collapse; font-size: .92rem; }
   .compare-table th { text-align: left; padding: 10px; background: var(--pink-soft); color: var(--ink); }
   .compare-table th:first-child { border-top-left-radius: 10px; }
@@ -91,254 +41,525 @@
   .compare-table td { border-top: 1px solid var(--line); }
   .warn { background:#fff0f3; border-left:4px solid var(--pink); padding:12px 16px; border-radius:10px; margin-top:14px; font-size:.9rem; }
   .scroll-hint { display: none; font-size: .75rem; color: var(--muted); text-align: center; margin-bottom: 8px; }
-  .map-list-btn {
-    display: inline-flex; align-items: center; gap: 6px; text-decoration: none;
-    background: linear-gradient(135deg, var(--pink), #ffb3c8); color: #fff;
-    padding: 12px 20px; border-radius: 14px; font-weight: 700; font-size: .98rem;
-    box-shadow: 0 4px 14px rgba(255,138,174,.35); transition: .2s;
-  }
+  .map-list-btn { display: inline-flex; align-items: center; gap: 6px; text-decoration: none;
+    background: linear-gradient(135deg, var(--pink), #ffb3c8); color: #fff; padding: 12px 20px; border-radius: 14px;
+    font-weight: 700; font-size: .98rem; box-shadow: 0 4px 14px rgba(255,138,174,.35); transition: .2s; }
   .map-list-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(255,138,174,.45); }
   ul.clean { list-style: none; }
   ul.clean li { padding: 8px 0; border-bottom: 1px dashed var(--line); }
   ul.clean li:last-child { border-bottom: none; }
   label.check { display: flex; align-items: center; gap: 10px; padding: 9px 0; cursor: pointer; border-bottom: 1px dashed var(--line); }
   label.check:last-child { border-bottom: none; }
-  label.check input { width: 18px; height: 18px; accent-color: var(--pink); }
+  label.check input { width: 18px; height: 18px; accent-color: var(--pink); flex: 0 0 auto; }
   label.check input:checked + span { text-decoration: line-through; color: var(--muted); }
-  .pill { display:inline-block; background:var(--pink-soft); color:var(--ink); padding:2px 10px; border-radius:12px; font-size:.78rem; margin-left:6px; }
-  footer { text-align: center; margin-top: 40px; color: var(--muted); font-size: .85rem; }
   .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .theme { display: inline-flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .theme span { background: var(--pink-soft); color: var(--ink); padding: 4px 12px; border-radius: 20px; font-size: .85rem; }
 
-  /* ===== 手機版自動調整 ===== */
+  /* ===== 交通章節 ===== */
+  .tips { background:#fff8e6; border-left:4px solid #ffd479; border-radius:10px; padding:12px 16px; margin:0 0 14px; font-size:.9rem; color:#8a7340; }
+  .tips b { color:#9a7320; }
+  section.leg-day { background:var(--card); border-radius:18px; margin:0 0 18px; overflow:hidden;
+    border:1px solid var(--line); box-shadow:0 4px 16px rgba(180,140,160,.12); border-top:5px solid var(--pink); }
+  section.leg-day > .day-head2 { padding:14px 18px; font-weight:700; font-size:1.1rem; display:flex; align-items:center; gap:9px; }
+  section.leg-day > .day-head2 .tag { color:#fff; font-size:.74rem; padding:3px 10px; border-radius:12px; }
+  .leg { padding:13px 18px; border-top:1px dashed var(--line); }
+  .leg .route { font-weight:700; font-size:.98rem; display:flex; align-items:flex-start; gap:7px; flex-wrap:wrap; }
+  .leg .route .arr { color:var(--muted); }
+  .leg .how { margin-top:6px; font-size:.9rem; }
+  .leg .badge { display:inline-block; font-size:.76rem; font-weight:700; padding:2px 9px; border-radius:10px; margin-right:6px; margin-bottom:3px; color:#fff; }
+  .b-walk{background:#8bbf6b;} .b-jr{background:#2f8f4e;} .b-metro{background:#e07a3f;}
+  .b-odk{background:#0a6cb5;} .b-eno{background:#1f9b8e;} .b-bus{background:#b06ab0;}
+  .b-mono{background:#c0566f;} .b-nex{background:#c0392b;}
+  .meta-line { font-size:.82rem; color:var(--muted); margin-top:5px; }
+  .meta-line span { margin-right:12px; }
+  .gmap-btn { display:inline-flex; align-items:center; gap:5px; margin-top:9px; text-decoration:none; font-size:.82rem; font-weight:700;
+    color:#1a73e8; background:#eaf2ff; border:1.5px solid #c9deff; padding:6px 12px; border-radius:14px; transition:.18s; }
+  .gmap-btn:hover { background:#1a73e8; color:#fff; border-color:#1a73e8; }
+  .gmap-btn .ic { font-size:.95rem; }
+
+  /* ===== 示意圖章節 ===== */
+  .map-card { background: var(--card); border-radius: 20px; padding: 16px; border: 1px solid var(--line);
+    box-shadow: 0 4px 18px rgba(180,140,160,.12); overflow-x: auto; }
+  svg.route-svg { display: block; width: 100%; height: auto; min-width: 560px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0 0; justify-content: center; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; font-size: .82rem; background: #fff; padding: 5px 12px; border-radius: 16px; border: 1px solid var(--line); }
+  .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+  .day-route { background: var(--card); border-radius: 16px; padding: 14px 18px; margin: 12px 0;
+    border: 1px solid var(--line); border-left: 6px solid var(--pink); box-shadow: 0 3px 14px rgba(180,140,160,.1); }
+  .day-route h3 { font-size: 1rem; display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .day-route .tag { color:#fff; font-size:.72rem; padding:2px 9px; border-radius:11px; font-weight:600; }
+  .path-text { font-size: .92rem; color: var(--ink); }
+  .path-text .arr { color: var(--muted); margin: 0 5px; }
+  .hotel { font-size: .82rem; color: var(--muted); margin-top: 4px; }
+
+  /* ===== 互動地圖章節 ===== */
+  .map-toolbar { display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin-bottom:10px; }
+  .toggle { text-decoration:none; color:var(--pink); font-weight:700; font-size:.9rem; background:#fff; padding:7px 14px; border-radius:16px; border:1.5px solid var(--pink-soft); cursor:pointer; transition:.15s; }
+  .toggle:hover { background:var(--pink); color:#fff; }
+  .toggle.off { opacity:.4; }
+  #leafletMap { width:100%; height:70vh; min-height:440px; border-radius:18px; border:1px solid var(--line); box-shadow:0 4px 18px rgba(180,140,160,.15); }
+  .map-note { font-size:.82rem; color:var(--muted); margin-top:10px; }
+  .leaflet-popup-content { font-size:.9rem; line-height:1.5; }
+  .leaflet-popup-content b { color:var(--pink); }
+  .pin-num { background:#fff; border:2px solid; border-radius:50%; width:26px; height:26px; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.8rem; box-shadow:0 1px 4px rgba(0,0,0,.25); }
+
   @media (max-width: 640px) {
-    body { padding-bottom: 40px; }
-    .wrap { padding: 0 12px; }
+    td { padding: 10px 12px; }
+    td.time { width: 54px; font-size: .9rem; }
+    td.map a { font-size: 1.2rem; }
     .grid2 { grid-template-columns: 1fr; gap: 0; }
-
-    header { padding: 34px 16px 26px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; }
-    header h1 { font-size: 1.45rem; line-height: 1.3; }
-    header .meta { font-size: .88rem; }
-    header .theme span { font-size: .78rem; padding: 3px 10px; }
-
-    /* 導覽列改成橫向可滑動，省垂直空間 */
-    nav.days {
-      flex-wrap: nowrap; overflow-x: auto; justify-content: flex-start;
-      gap: 6px; padding: 10px; margin: 16px 0 4px; border-radius: 14px;
-      -webkit-overflow-scrolling: touch; scrollbar-width: none;
-    }
-    nav.days::-webkit-scrollbar { display: none; }
-    nav.days a { flex: 0 0 auto; font-size: .8rem; padding: 5px 10px; }
-
-    section.day { margin: 16px 0; border-radius: 16px; }
-    .day-head { padding: 13px 16px; font-size: 1.02rem; gap: 8px; }
-    .day-head .date-tag { font-size: .72rem; padding: 3px 8px; }
-
-    /* 行程表：縮 padding、時間欄變窄 */
-    td { padding: 10px 14px; }
-    td.time { width: 56px; font-size: .9rem; }
-    td.map { width: 38px; padding-left: 4px; padding-right: 14px; }
-    td.map a { font-size: 1.25rem; }
-
-    .note { margin: 4px 14px 14px; font-size: .85rem; padding: 9px 12px; }
-    h2.block { font-size: 1.18rem; margin: 28px 0 12px; }
-    .card { padding: 16px 16px; border-radius: 16px; }
-
-    /* 對照表：欄位緊縮，可橫向滑動避免擠壓 */
+    .card { padding: 16px 16px; }
     .card-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
     .scroll-hint { display: block; }
     .compare-table { font-size: .85rem; min-width: 460px; }
     .compare-table th, .compare-table td { padding: 8px; }
-
-    .warn { font-size: .85rem; padding: 10px 12px; }
-    label.check { gap: 9px; padding: 10px 0; font-size: .92rem; align-items: flex-start; }
-    label.check input { margin-top: 2px; flex: 0 0 auto; }
-  }
-
-  /* 觸控裝置：用 active 取代 hover，避免點完卡住高亮 */
-  @media (hover: none) {
-    nav.days a:active { background: var(--pink); color: #fff; }
+    #leafletMap { height: 64vh; }
   }
 </style>
 </head>
 <body>
-<header>
-  <h1>Bernie &amp; Nydia 東京旅行手札 ✈️</h1>
-  <div class="meta">📍 東京 &amp; 鎌倉・江之島　｜　🗓️ 6/23 ~ 6/29</div>
-  <div class="theme">
-    <span>文青散步</span><span>浪漫約會</span><span>夜景必看</span><span>美食巡禮</span>
-  </div>
-</header>
 
-<div class="wrap">
+<div class="topbar">
+  <button class="menu-btn" id="menuBtn" aria-label="切換目錄">☰</button>
+  <div class="brand">Bernie &amp; Nydia 東京旅行手札 ✈️ <small>6/23 ~ 6/29</small></div>
+</div>
 
-  <nav class="days">
-    <a href="#d23">6/23</a><a href="#d24">6/24</a><a href="#d25">6/25</a>
-    <a href="#d26">6/26</a><a href="#d27">6/27</a><a href="#d28">6/28</a><a href="#d29">6/29</a>
-    <a href="#extra">地圖清單</a><a href="#photo">拍照</a><a href="#kimono">和服</a><a href="#stay">住宿</a><a href="#shop">必買</a><a href="#note">筆記</a>
-    <a href="route.html" style="background:var(--pink);color:#fff;">🗺️ 路徑圖</a>
-    <a href="map.html" style="background:#4d96ff;color:#fff;border-color:#4d96ff;">🗾 互動地圖</a>
-    <a href="transit.html" style="background:#2f8f4e;color:#fff;border-color:#2f8f4e;">🚃 交通</a>
-  </nav>
+<div class="scrim" id="scrim"></div>
 
-  <section class="day" id="d23">
-    <div class="day-head"><span class="date-tag">6/23 Tue</span>抵達東京</div>
-    <table>
-      <tr><td class="time">20:00</td><td class="act">抵達成田機場</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=成田機場" target="_blank">📍</a></td></tr>
-      <tr><td class="time">22:00</td><td class="act">搭乘特快 N'EX 或利木津巴士前往市區</td><td class="map">—</td></tr>
-      <tr><td class="time">23:00</td><td class="act">🏨 入住 <strong>上野站南 APA 飯店</strong>，好好休息！ <span class="pill">已訂</span></td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=APA+Hotel+Ueno+Ekiminami" target="_blank">📍</a></td></tr>
-    </table>
-    <div class="note">💡 辛苦飛行了，匆匆早點休息～<br>🏨 <strong>上野站南 APA 飯店</strong> ⭐⭐⭐｜6/23→6/24｜入住 15:00・退房 10:00｜東京都台東區上野 6-7-21（〒110-0005）。上野站旁，進市區方便。</div>
-  </section>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="group-label">總覽</div>
+    <a class="nav-item" data-target="overview"><span class="ndot" style="background:var(--pink)"></span>行程總覽</a>
 
-  <section class="day" id="d24">
-    <div class="day-head"><span class="date-tag">6/24 Wed</span>鎌倉・江之島散策 DAY 1</div>
-    <table>
-      <tr><td class="time">08:30</td><td class="act">上野站南 APA 飯店 退房（10:00 前）</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=APA+Hotel+Ueno+Ekiminami" target="_blank">📍</a></td></tr>
-      <tr><td class="time">09:00</td><td class="act">出發前往鎌倉</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=鎌倉駅" target="_blank">📍</a></td></tr>
-      <tr><td class="time">10:00</td><td class="act">鎌倉高校前（交通）</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=鎌倉高校前駅" target="_blank">📍</a></td></tr>
-      <tr><td class="time">11:00</td><td class="act">小町通商店街（逛逛吃吃）</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=小町通り" target="_blank">📍</a></td></tr>
-      <tr><td class="time">12:30</td><td class="act">Cafe Yoridocoro（午餐）</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=Cafe+Yoridocoro+鎌倉" target="_blank">📍</a></td></tr>
-      <tr><td class="time">15:00</td><td class="act">七里濱海岸散步</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=七里ヶ浜" target="_blank">📍</a></td></tr>
-      <tr><td class="time">16:00</td><td class="act">bills 七里濱（下午茶）</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=bills+七里ヶ浜" target="_blank">📍</a></td></tr>
-      <tr><td class="time">17:30</td><td class="act">江之島看夕陽 🌅</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=江の島" target="_blank">📍</a></td></tr>
-      <tr><td class="time">19:00</td><td class="act">🏨 入住 <strong>Raku</strong> <span class="pill">已訂</span><br><small style="color:var(--muted)">片瀨海岸・江之島旁・入住 16:00–22:00</small></td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=Raku+片瀬海岸+藤沢" target="_blank">📍</a></td></tr>
-    </table>
-    <div class="note">🏨 <strong>Raku</strong> ⭐⭐⭐⭐｜6/24→6/25｜入住 16:00–22:00・退房 10:00｜神奈川縣藤澤市 Katase Kaigan 2-13-4。江之島步行可達，看完夕陽就近 check-in。</div>
-  </section>
+    <div class="group-label">每日行程</div>
+    <a class="nav-item" data-target="d23"><span class="ndot" style="background:var(--d23)"></span>6/23 抵達東京</a>
+    <a class="nav-item" data-target="d24"><span class="ndot" style="background:var(--d24)"></span>6/24 鎌倉江之島 1</a>
+    <a class="nav-item" data-target="d25"><span class="ndot" style="background:var(--d25)"></span>6/25 鎌倉江之島 2</a>
+    <a class="nav-item" data-target="d26"><span class="ndot" style="background:var(--d26)"></span>6/26 銀座台場</a>
+    <a class="nav-item" data-target="d27"><span class="ndot" style="background:var(--d27)"></span>6/27 摩登夜景</a>
+    <a class="nav-item" data-target="d28"><span class="ndot" style="background:var(--d28)"></span>6/28 經典景點</a>
+    <a class="nav-item" data-target="d29"><span class="ndot" style="background:var(--d29)"></span>6/29 回家</a>
 
-  <section class="day" id="d25">
-    <div class="day-head"><span class="date-tag">6/25 Thu</span>鎌倉・江之島散策 DAY 2</div>
-    <table>
-      <tr><td class="time">09:00</td><td class="act">Raku 退房（10:00 前）</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=Raku+片瀬海岸+藤沢" target="_blank">📍</a></td></tr>
-      <tr><td class="time">09:30</td><td class="act">熊見亭（鎌倉美食）</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=熊見亭+鎌倉" target="_blank">📍</a></td></tr>
-      <tr><td class="time">11:00</td><td class="act">江之島散策</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=江の島" target="_blank">📍</a></td></tr>
-      <tr><td class="time">13:00</td><td class="act">Espresso D Works yellow 七里濱</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=Espresso+D+Works+七里ヶ浜" target="_blank">📍</a></td></tr>
-      <tr><td class="time">15:00</td><td class="act">小町通商店街 再逛一波</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=小町通り" target="_blank">📍</a></td></tr>
-      <tr><td class="time">16:30</td><td class="act">返回飯店休息</td><td class="map">—</td></tr>
-    </table>
-  </section>
+    <div class="group-label">地圖與交通</div>
+    <a class="nav-item" data-target="transit"><span class="ndot" style="background:var(--green)"></span>🚃 交通方式</a>
+    <a class="nav-item" data-target="route"><span class="ndot" style="background:var(--pink)"></span>🗺️ 路徑示意圖</a>
+    <a class="nav-item" data-target="map"><span class="ndot" style="background:var(--blue)"></span>🗾 互動地圖</a>
 
-  <section class="day" id="d26">
-    <div class="day-head"><span class="date-tag">6/26 Fri</span>銀座美食・台場夜景</div>
-    <table>
-      <tr><td class="time">09:30</td><td class="act">退房，前往東京市區（建議寄行李）</td><td class="map">—</td></tr>
-      <tr><td class="time">11:00</td><td class="act">銀座三越 敘敘苑（燒肉午餐）</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=銀座三越+敘敘苑" target="_blank">📍</a></td></tr>
-      <tr><td class="time">13:00</td><td class="act">築地場外市場 吃海鮮、散步</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=築地場外市場" target="_blank">📍</a></td></tr>
-      <tr><td class="time">19:00</td><td class="act">台場散步、夜景（可搭配摩天輪）</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=お台場" target="_blank">📍</a></td></tr>
-    </table>
-  </section>
+    <div class="group-label">旅行資訊</div>
+    <a class="nav-item" data-target="stay"><span class="ndot" style="background:var(--pink)"></span>🏨 住宿</a>
+    <a class="nav-item" data-target="kimono"><span class="ndot" style="background:var(--pink)"></span>👘 和服攻略</a>
+    <a class="nav-item" data-target="shop"><span class="ndot" style="background:var(--pink)"></span>🛍️ 必買清單</a>
+    <a class="nav-item" data-target="photo"><span class="ndot" style="background:var(--pink)"></span>📸 拍照計畫</a>
+    <a class="nav-item" data-target="note"><span class="ndot" style="background:var(--pink)"></span>📝 旅行筆記</a>
+  </aside>
 
-  <section class="day" id="d27">
-    <div class="day-head"><span class="date-tag">6/27 Sat</span>摩登東京・夜景巡禮</div>
-    <table>
-      <tr><td class="time">09:30</td><td class="act">代官山散策、咖啡廳</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=代官山" target="_blank">📍</a></td></tr>
-      <tr><td class="time">11:30</td><td class="act">Stellar Garden Sky Bar（午餐）</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=Stellar+Garden+Sky+Bar" target="_blank">📍</a></td></tr>
-      <tr><td class="time">14:00</td><td class="act">澀谷 SKY（建議日落前上去）</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=Shibuya+Sky" target="_blank">📍</a></td></tr>
-      <tr><td class="time">16:30</td><td class="act">下北澤逛街、古著小店</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=下北沢" target="_blank">📍</a></td></tr>
-      <tr><td class="time">19:00</td><td class="act">六本木新城展望台（東京城市景觀）</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=六本木ヒルズ+展望台" target="_blank">📍</a></td></tr>
-    </table>
-  </section>
+  <main class="main">
+  <div class="wrap">
 
-  <section class="day" id="d28">
-    <div class="day-head"><span class="date-tag">6/28 Sun</span>經典景點・文青散步日</div>
-    <table>
-      <tr><td class="time">08:30</td><td class="act">🎟️ teamLab Borderless 數位藝術美術館 <span class="pill">已購票</span><br><small style="color:var(--muted)">麻布台・預約時段 8:30</small></td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=teamLab+Borderless+麻布台" target="_blank">📍</a></td></tr>
-      <tr><td class="time">09:30</td><td class="act">上野公園散步</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=上野公園" target="_blank">📍</a></td></tr>
-      <tr><td class="time">12:00</td><td class="act">秋葉原電氣街（逛電器、動漫）</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=秋葉原電気街" target="_blank">📍</a></td></tr>
-      <tr><td class="time">14:30</td><td class="act">淺草寺、雷門</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=浅草寺+雷門" target="_blank">📍</a></td></tr>
-      <tr><td class="time">16:00</td><td class="act">摩利支天德大寺</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=摩利支天徳大寺" target="_blank">📍</a></td></tr>
-      <tr><td class="time">17:30</td><td class="act">豪德寺（看招財貓）</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=豪徳寺" target="_blank">📍</a></td></tr>
-      <tr><td class="time">19:00</td><td class="act">東京鐵塔 &amp; 芝公園散步</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=東京タワー" target="_blank">📍</a></td></tr>
-      <tr><td class="time">21:30</td><td class="act">🏨 移動至成田，入住 <strong>成田東武機場酒店</strong> <span class="pill">已訂</span><br><small style="color:var(--muted)">入住 15:00 起</small></td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=成田東武機場酒店+Narita+Tobu+Hotel+Airport" target="_blank">📍</a></td></tr>
-    </table>
-    <div class="note">🏨 <strong>成田東武機場酒店</strong> ⭐⭐⭐⭐｜6/28→6/29｜入住 15:00・退房 11:00｜千葉縣成田市 Tokko 320-1。住機場旁，方便隔天一早離境，建議東京玩到傍晚後搭車回成田。</div>
-  </section>
+    <!-- ===== 總覽 ===== -->
+    <section class="page" id="overview">
+      <div class="page-title">✈️ 行程總覽</div>
+      <div class="page-sub">📍 東京 &amp; 鎌倉・江之島　｜　🗓️ 6/23 ~ 6/29</div>
+      <div class="theme"><span>文青散步</span><span>浪漫約會</span><span>夜景必看</span><span>美食巡禮</span></div>
 
-  <section class="day" id="d29">
-    <div class="day-head"><span class="date-tag">6/29 Mon</span>最後一天・買買買 &amp; 回家囉！</div>
-    <table>
-      <tr><td class="time">06:00</td><td class="act">成田東武機場酒店 退房（飯店有機場接駁）</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=成田東武機場酒店+Narita+Tobu+Hotel+Airport" target="_blank">📍</a></td></tr>
-      <tr><td class="time">06:30</td><td class="act">前往成田機場</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=成田機場" target="_blank">📍</a></td></tr>
-      <tr><td class="time">09:15</td><td class="act">成田機場離境</td><td class="map">—</td></tr>
-    </table>
-    <div class="note">💡 期待下次的旅行 ❤️</div>
-  </section>
+      <div class="card" style="margin-bottom:18px;">
+        <strong>🗺️ Nydia 的「Tokyo &amp; 江ノ島」地圖清單</strong>
+        <div style="margin-top:12px;">
+          <a class="map-list-btn" href="https://www.google.com/maps/@35.5110201,139.3077958,10z/data=!4m2!11m1!2sZt10yFdt_cbtEA8Ixde_tg" target="_blank">🗺️ 開啟完整地圖清單（全部 19 個地點）</a>
+        </div>
+        <div style="font-size:.85rem;color:var(--muted);margin-top:8px;">由 Nydia 建立的共用清單，含所有收藏景點與備註。</div>
+      </div>
 
-  <h2 class="block" id="extra">🗺️ Nydia 的「Tokyo &amp; 江ノ島」地圖清單</h2>
-  <div class="card" style="margin-bottom:14px;">
-    <a class="map-list-btn" href="https://www.google.com/maps/@35.5110201,139.3077958,10z/data=!4m2!11m1!2sZt10yFdt_cbtEA8Ixde_tg" target="_blank">🗺️ 開啟完整地圖清單（全部 19 個地點）</a>
-    <div style="font-size:.85rem;color:var(--muted);margin-top:8px;">由 Nydia 建立的共用清單，含所有收藏景點與備註。</div>
-  </div>
+      <h3 style="color:var(--pink);margin:8px 0 10px;">尚未排入行程的景點</h3>
+      <div class="card card-scroll">
+        <div class="scroll-hint">← 表格可左右滑動 →</div>
+        <table class="compare-table">
+          <thead><tr><th>地點</th><th>類型</th><th>備註</th><th>地圖</th></tr></thead>
+          <tbody>
+            <tr><td>豐洲 千客萬來</td><td>商場</td><td>豐洲美食商場，可安排在 6/26 台場附近</td><td><a href="https://www.google.com/maps/search/?api=1&query=豊洲+千客万来" target="_blank">📍</a></td></tr>
+            <tr><td>HARBS LUMINE EST 新宿店</td><td>咖啡店</td><td>知名水果千層蛋糕，可順遊新宿</td><td><a href="https://www.google.com/maps/search/?api=1&query=HARBS+LUMINE+EST+新宿" target="_blank">📍</a></td></tr>
+            <tr><td>RARASAND</td><td>咖啡店</td><td>招牌「招福燒」、招財貓周邊；可搭豪德寺</td><td><a href="https://www.google.com/maps/search/?api=1&query=RARASAND" target="_blank">📍</a></td></tr>
+          </tbody>
+        </table>
+        <div class="warn">💡 <strong>teamLab：</strong>已預約 <strong>6/28 (日) 8:30 Borderless（麻布台）</strong>。<br>⚠️ <strong>6/28 動線（待調整）：</strong>Borderless 在麻布台，當天其餘景點（上野→秋葉原→淺草→豪德寺）偏北/西側，跨區移動較遠，後續再一起重排。</div>
+      </div>
+    </section>
 
-  <h3 class="block" style="font-size:1.1rem;margin-top:8px;">尚未排入行程的景點</h3>
-  <div class="card card-scroll">
-    <div class="scroll-hint">← 表格可左右滑動 →</div>
-    <table class="compare-table">
-      <thead><tr><th>地點</th><th>類型</th><th>備註</th><th>地圖</th></tr></thead>
-      <tbody>
-        <tr><td>豐洲 千客萬來</td><td>商場</td><td>豐洲美食商場，可安排在 6/26 台場附近</td><td><a href="https://www.google.com/maps/search/?api=1&query=豊洲+千客万来" target="_blank">📍</a></td></tr>
-        <tr><td>HARBS LUMINE EST 新宿店</td><td>咖啡店</td><td>知名水果千層蛋糕，可順遊新宿</td><td><a href="https://www.google.com/maps/search/?api=1&query=HARBS+LUMINE+EST+新宿" target="_blank">📍</a></td></tr>
-        <tr><td>RARASAND</td><td>咖啡店</td><td>招牌「招福燒」、招財貓周邊；可搭豪德寺</td><td><a href="https://www.google.com/maps/search/?api=1&query=RARASAND" target="_blank">📍</a></td></tr>
-      </tbody>
-    </table>
-    <div class="warn">💡 <strong>teamLab：</strong>已預約 <strong>6/28 (日) 8:30 Borderless（麻布台）</strong>。<br>⚠️ <strong>6/28 動線（待調整）：</strong>Borderless 在麻布台，當天其餘景點（上野→秋葉原→淺草→豪德寺）偏北/西側，跨區移動較遠，後續再一起重排。</div>
-  </div>
+    <!-- ===== 6/23 ===== -->
+    <section class="page" id="d23">
+      <div class="page-title"><span class="dot" style="background:var(--d23)"></span>6/23 Tue · 抵達東京</div>
+      <section class="day">
+        <div class="day-head"><span class="date-tag">6/23 Tue</span>抵達東京</div>
+        <table>
+          <tr><td class="time">20:00</td><td class="act">抵達成田機場</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=成田機場" target="_blank">📍</a></td></tr>
+          <tr><td class="time">22:00</td><td class="act">搭乘特快 N'EX 或利木津巴士前往市區</td><td class="map">—</td></tr>
+          <tr><td class="time">23:00</td><td class="act">🏨 入住 <strong>上野站南 APA 飯店</strong>，好好休息！ <span class="pill">已訂</span></td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=APA+Hotel+Ueno+Ekiminami" target="_blank">📍</a></td></tr>
+        </table>
+        <div class="note">💡 辛苦飛行了，匆匆早點休息～<br>🏨 <strong>上野站南 APA 飯店</strong> ⭐⭐⭐｜6/23→6/24｜入住 15:00・退房 10:00｜東京都台東區上野 6-7-21（〒110-0005）。上野站旁，進市區方便。</div>
+      </section>
+      <a class="day-link" data-target="transit">🚃 查看 6/23 交通方式</a>
+    </section>
 
-  <h2 class="block" id="photo">📸 拍照計畫 &amp; 待確認</h2>
-  <div class="card">
-    <label class="check"><input type="checkbox"><span><strong>互惠攝影師</strong>：已約好攝影師，<strong>尚未確定第幾天拍照</strong> ⏳（待喬日期）</span></label>
-    <label class="check"><input type="checkbox"><span><strong>和服拍照</strong>：想找一天穿和服拍照 —— 或許就安排在互惠攝影的同一天 👘</span></label>
-    <label class="check"><input type="checkbox"><span>確定日期後，把拍照行程填進當天的時間表</span></label>
-    <div class="warn">💡 建議：和服體驗多在淺草、鎌倉一帶；若搭配互惠攝影，可考慮 <strong>6/24–6/25 鎌倉江之島</strong>（和服＋海景）或 <strong>6/28 淺草</strong>（雷門＋和服）的氛圍。</div>
-  </div>
+    <!-- ===== 6/24 ===== -->
+    <section class="page" id="d24">
+      <div class="page-title"><span class="dot" style="background:var(--d24)"></span>6/24 Wed · 鎌倉・江之島 DAY 1</div>
+      <section class="day">
+        <div class="day-head"><span class="date-tag">6/24 Wed</span>鎌倉・江之島散策 DAY 1</div>
+        <table>
+          <tr><td class="time">08:30</td><td class="act">上野站南 APA 飯店 退房（10:00 前）</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=APA+Hotel+Ueno+Ekiminami" target="_blank">📍</a></td></tr>
+          <tr><td class="time">09:00</td><td class="act">出發前往鎌倉</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=鎌倉駅" target="_blank">📍</a><br><a class="route-ico" title="上野→鎌倉 大眾運輸" href="https://www.google.com/maps/dir/?api=1&origin=上野駅&destination=鎌倉駅&travelmode=transit" target="_blank">🚆</a></td></tr>
+          <tr><td class="time">10:00</td><td class="act">鎌倉高校前（交通）</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=鎌倉高校前駅" target="_blank">📍</a><br><a class="route-ico" title="鎌倉→鎌倉高校前 大眾運輸" href="https://www.google.com/maps/dir/?api=1&origin=鎌倉駅&destination=鎌倉高校前駅&travelmode=transit" target="_blank">🚆</a></td></tr>
+          <tr><td class="time">11:00</td><td class="act">小町通商店街（逛逛吃吃）</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=小町通り" target="_blank">📍</a><br><a class="route-ico" title="鎌倉高校前→小町通 大眾運輸" href="https://www.google.com/maps/dir/?api=1&origin=鎌倉高校前駅&destination=小町通り&travelmode=transit" target="_blank">🚆</a></td></tr>
+          <tr><td class="time">12:30</td><td class="act">Cafe Yoridocoro（午餐）</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=Cafe+Yoridocoro+鎌倉" target="_blank">📍</a><br><a class="route-ico" title="小町通→Yoridocoro 大眾運輸" href="https://www.google.com/maps/dir/?api=1&origin=小町通り&destination=Cafe+Yoridocoro+鎌倉&travelmode=transit" target="_blank">🚆</a></td></tr>
+          <tr><td class="time">15:00</td><td class="act">七里濱海岸散步</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=七里ヶ浜" target="_blank">📍</a><br><a class="route-ico" title="Yoridocoro→七里ヶ浜 大眾運輸" href="https://www.google.com/maps/dir/?api=1&origin=Cafe+Yoridocoro+鎌倉&destination=七里ヶ浜&travelmode=transit" target="_blank">🚆</a></td></tr>
+          <tr><td class="time">16:00</td><td class="act">bills 七里濱（下午茶）</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=bills+七里ヶ浜" target="_blank">📍</a></td></tr>
+          <tr><td class="time">17:30</td><td class="act">江之島看夕陽 🌅</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=江の島" target="_blank">📍</a><br><a class="route-ico" title="七里ヶ浜→江之島 大眾運輸" href="https://www.google.com/maps/dir/?api=1&origin=七里ヶ浜&destination=江の島&travelmode=transit" target="_blank">🚆</a></td></tr>
+          <tr><td class="time">19:00</td><td class="act">🏨 入住 <strong>Raku</strong> <span class="pill">已訂</span><br><small style="color:var(--muted)">片瀨海岸・江之島旁・入住 16:00–22:00</small></td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=Raku+片瀬海岸+藤沢" target="_blank">📍</a></td></tr>
+        </table>
+        <div class="note">🏨 <strong>Raku</strong> ⭐⭐⭐⭐｜6/24→6/25｜入住 16:00–22:00・退房 10:00｜神奈川縣藤澤市 Katase Kaigan 2-13-4。江之島步行可達，看完夕陽就近 check-in。</div>
+      </section>
+      <a class="day-link" data-target="transit">🚃 查看 6/24 交通方式</a>
+    </section>
 
-  <h2 class="block" id="kimono">👘 和服／浴衣租借攻略（2026）</h2>
-  <div class="card">
-    <div class="warn" style="margin-top:0;">🌸 你們是 <strong>6 月</strong>出遊 —— 鎌倉・江之島 <strong>6～9 月為「浴衣（夏季和服）」季</strong>，配海景最對味；淺草則全年是經典「和服」體驗地。</div>
+    <!-- ===== 6/25 ===== -->
+    <section class="page" id="d25">
+      <div class="page-title"><span class="dot" style="background:var(--d25)"></span>6/25 Thu · 鎌倉・江之島 DAY 2</div>
+      <section class="day">
+        <div class="day-head"><span class="date-tag">6/25 Thu</span>鎌倉・江之島散策 DAY 2</div>
+        <table>
+          <tr><td class="time">09:00</td><td class="act">Raku 退房（10:00 前）</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=Raku+片瀬海岸+藤沢" target="_blank">📍</a></td></tr>
+          <tr><td class="time">09:30</td><td class="act">熊見亭（鎌倉美食）</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=熊見亭+鎌倉" target="_blank">📍</a></td></tr>
+          <tr><td class="time">11:00</td><td class="act">江之島散策</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=江の島" target="_blank">📍</a></td></tr>
+          <tr><td class="time">13:00</td><td class="act">Espresso D Works yellow 七里濱</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=Espresso+D+Works+七里ヶ浜" target="_blank">📍</a></td></tr>
+          <tr><td class="time">15:00</td><td class="act">小町通商店街 再逛一波</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=小町通り" target="_blank">📍</a></td></tr>
+          <tr><td class="time">16:30</td><td class="act">返回飯店休息</td><td class="map">—</td></tr>
+        </table>
+      </section>
+      <a class="day-link" data-target="transit">🚃 查看 6/25 交通方式</a>
+    </section>
 
-    <strong style="display:block;margin:16px 0 8px;">🎯 給你們行程的兩個方案</strong>
-    <div class="card-scroll" style="overflow-x:auto;">
-      <div class="scroll-hint">← 表格可左右滑動 →</div>
-      <table class="compare-table" style="min-width:0;">
-        <thead><tr><th>方案</th><th>地點</th><th>對應行程</th><th>氛圍</th></tr></thead>
-        <tbody>
-          <tr><td><strong>A · 浴衣+海景</strong> ⭐</td><td>江之島／鎌倉</td><td>6/24–6/25</td><td>湘南海岸、江之島夕陽，夏日浴衣最應景</td></tr>
-          <tr><td>B · 和服+下町</td><td>淺草</td><td>6/28</td><td>雷門、仲見世、淺草寺經典街景</td></tr>
-        </tbody>
-      </table>
-    </div>
+    <!-- ===== 6/26 ===== -->
+    <section class="page" id="d26">
+      <div class="page-title"><span class="dot" style="background:var(--d26)"></span>6/26 Fri · 銀座美食・台場夜景</div>
+      <section class="day">
+        <div class="day-head"><span class="date-tag">6/26 Fri</span>銀座美食・台場夜景</div>
+        <table>
+          <tr><td class="time">09:30</td><td class="act">退房，前往東京市區（建議寄行李）</td><td class="map">—</td></tr>
+          <tr><td class="time">11:00</td><td class="act">銀座三越 敘敘苑（燒肉午餐）</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=銀座三越+敘敘苑" target="_blank">📍</a><br><a class="route-ico" title="片瀨江之島→銀座 大眾運輸" href="https://www.google.com/maps/dir/?api=1&origin=片瀬江ノ島駅&destination=銀座三越&travelmode=transit" target="_blank">🚆</a></td></tr>
+          <tr><td class="time">13:00</td><td class="act">築地場外市場 吃海鮮、散步</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=築地場外市場" target="_blank">📍</a><br><a class="route-ico" title="銀座→築地 大眾運輸" href="https://www.google.com/maps/dir/?api=1&origin=銀座駅&destination=築地場外市場&travelmode=transit" target="_blank">🚆</a></td></tr>
+          <tr><td class="time">19:00</td><td class="act">台場散步、夜景（可搭配摩天輪）</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=お台場" target="_blank">📍</a><br><a class="route-ico" title="築地→台場 大眾運輸" href="https://www.google.com/maps/dir/?api=1&origin=築地場外市場&destination=お台場海浜公園駅&travelmode=transit" target="_blank">🚆</a></td></tr>
+        </table>
+      </section>
+      <a class="day-link" data-target="transit">🚃 查看 6/26 交通方式</a>
+    </section>
 
-    <strong style="display:block;margin:18px 0 8px;">💰 價格行情（含著付＝穿衣）</strong>
-    <ul class="clean">
-      <li><strong>江之島 SALA</strong>（片瀨海岸，<em>就在 Raku 住宿旁！</em>）：浴衣 <strong>¥2,800</strong>、情侶 ¥5,500、男性 ¥3,000（全包・手ぶら OK）</li>
-      <li><strong>鎌倉</strong>（きもの小町／都／梨花和服）：全包約 <strong>¥3,000–4,500</strong>，情侶 ¥6,600 起</li>
-      <li><strong>淺草和服</strong>：女性 ¥3,000–6,000、情侶 ¥6,500–12,000、學割 ¥3,300 起；髮型 +¥1,000–2,000</li>
-    </ul>
+    <!-- ===== 6/27 ===== -->
+    <section class="page" id="d27">
+      <div class="page-title"><span class="dot" style="background:var(--d27)"></span>6/27 Sat · 摩登東京・夜景巡禮</div>
+      <section class="day">
+        <div class="day-head"><span class="date-tag">6/27 Sat</span>摩登東京・夜景巡禮</div>
+        <table>
+          <tr><td class="time">09:30</td><td class="act">代官山散策、咖啡廳</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=代官山" target="_blank">📍</a><br><a class="route-ico" title="上野→代官山 大眾運輸" href="https://www.google.com/maps/dir/?api=1&origin=上野駅&destination=代官山駅&travelmode=transit" target="_blank">🚆</a></td></tr>
+          <tr><td class="time">11:30</td><td class="act">Stellar Garden Sky Bar（午餐）</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=Stellar+Garden+Sky+Bar" target="_blank">📍</a><br><a class="route-ico" title="代官山→Stellar Garden 大眾運輸" href="https://www.google.com/maps/dir/?api=1&origin=代官山駅&destination=Stellar+Garden+Sky+Bar&travelmode=transit" target="_blank">🚆</a></td></tr>
+          <tr><td class="time">14:00</td><td class="act">澀谷 SKY（建議日落前上去）</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=Shibuya+Sky" target="_blank">📍</a><br><a class="route-ico" title="Stellar Garden→澀谷SKY 大眾運輸" href="https://www.google.com/maps/dir/?api=1&origin=Stellar+Garden+Sky+Bar&destination=渋谷スクランブルスクエア&travelmode=transit" target="_blank">🚆</a></td></tr>
+          <tr><td class="time">16:30</td><td class="act">下北澤逛街、古著小店</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=下北沢" target="_blank">📍</a><br><a class="route-ico" title="澀谷→下北澤 大眾運輸" href="https://www.google.com/maps/dir/?api=1&origin=渋谷駅&destination=下北沢駅&travelmode=transit" target="_blank">🚆</a></td></tr>
+          <tr><td class="time">19:00</td><td class="act">六本木新城展望台（東京城市景觀）</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=六本木ヒルズ+展望台" target="_blank">📍</a><br><a class="route-ico" title="下北澤→六本木 大眾運輸" href="https://www.google.com/maps/dir/?api=1&origin=下北沢駅&destination=六本木ヒルズ&travelmode=transit" target="_blank">🚆</a></td></tr>
+        </table>
+      </section>
+      <a class="day-link" data-target="transit">🚃 查看 6/27 交通方式</a>
+    </section>
 
-    <strong style="display:block;margin:18px 0 8px;">✅ 五大重點</strong>
-    <ul class="clean">
-      <li>🗓️ <strong>務必線上事前預約</strong>（有折扣、免排隊）</li>
-      <li>💴 確認是不是「<strong>全包價</strong>」（髮型／小物／包常另收費）</li>
-      <li>👫 善用 <strong>學割 / 情侶割 / 團體割</strong>，可省 ¥1,000–2,000</li>
-      <li>⏰ 一般 17:30–18:00 歸還；+¥2,000 可<strong>延長或隔天還</strong>（適合拍夕陽夜景）</li>
-      <li>⌛ 預留 <strong>45–60 分</strong>著裝＋選衣＋髮型時間</li>
-    </ul>
+    <!-- ===== 6/28 ===== -->
+    <section class="page" id="d28">
+      <div class="page-title"><span class="dot" style="background:var(--d28)"></span>6/28 Sun · 經典景點・文青散步日</div>
+      <section class="day">
+        <div class="day-head"><span class="date-tag">6/28 Sun</span>經典景點・文青散步日</div>
+        <table>
+          <tr><td class="time">08:30</td><td class="act">🎟️ teamLab Borderless 數位藝術美術館 <span class="pill">已購票</span><br><small style="color:var(--muted)">麻布台・預約時段 8:30</small></td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=teamLab+Borderless+麻布台" target="_blank">📍</a></td></tr>
+          <tr><td class="time">09:30</td><td class="act">上野公園散步</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=上野公園" target="_blank">📍</a><br><a class="route-ico" title="麻布台→上野公園 大眾運輸" href="https://www.google.com/maps/dir/?api=1&origin=麻布台ヒルズ&destination=上野公園&travelmode=transit" target="_blank">🚆</a></td></tr>
+          <tr><td class="time">12:00</td><td class="act">秋葉原電氣街（逛電器、動漫）</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=秋葉原電気街" target="_blank">📍</a><br><a class="route-ico" title="上野→秋葉原 大眾運輸" href="https://www.google.com/maps/dir/?api=1&origin=上野公園&destination=秋葉原駅&travelmode=transit" target="_blank">🚆</a></td></tr>
+          <tr><td class="time">14:30</td><td class="act">淺草寺、雷門</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=浅草寺+雷門" target="_blank">📍</a><br><a class="route-ico" title="秋葉原→淺草寺 大眾運輸" href="https://www.google.com/maps/dir/?api=1&origin=秋葉原駅&destination=浅草寺&travelmode=transit" target="_blank">🚆</a></td></tr>
+          <tr><td class="time">16:00</td><td class="act">摩利支天德大寺</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=摩利支天徳大寺" target="_blank">📍</a><br><a class="route-ico" title="淺草寺→德大寺 大眾運輸" href="https://www.google.com/maps/dir/?api=1&origin=浅草寺&destination=摩利支天徳大寺&travelmode=transit" target="_blank">🚆</a></td></tr>
+          <tr><td class="time">17:30</td><td class="act">豪德寺（看招財貓）</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=豪徳寺" target="_blank">📍</a><br><a class="route-ico" title="德大寺→豪德寺 大眾運輸（此段最長）" href="https://www.google.com/maps/dir/?api=1&origin=摩利支天徳大寺&destination=豪徳寺&travelmode=transit" target="_blank">🚆</a></td></tr>
+          <tr><td class="time">19:00</td><td class="act">東京鐵塔 &amp; 芝公園散步</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=東京タワー" target="_blank">📍</a><br><a class="route-ico" title="豪德寺→東京鐵塔 大眾運輸" href="https://www.google.com/maps/dir/?api=1&origin=豪徳寺&destination=東京タワー&travelmode=transit" target="_blank">🚆</a></td></tr>
+          <tr><td class="time">21:30</td><td class="act">🏨 移動至成田，入住 <strong>成田東武機場酒店</strong> <span class="pill">已訂</span><br><small style="color:var(--muted)">入住 15:00 起</small></td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=成田東武機場酒店+Narita+Tobu+Hotel+Airport" target="_blank">📍</a></td></tr>
+        </table>
+        <div class="note">🏨 <strong>成田東武機場酒店</strong> ⭐⭐⭐⭐｜6/28→6/29｜入住 15:00・退房 11:00｜千葉縣成田市 Tokko 320-1。住機場旁，方便隔天一早離境，建議東京玩到傍晚後搭車回成田。</div>
+      </section>
+      <a class="day-link" data-target="transit">🚃 查看 6/28 交通方式</a>
+    </section>
 
-    <div class="warn">📅 <strong>建議排法（方案 A）：</strong>6/24 下午抵江之島 → 於 <strong>SALA（片瀨海岸）</strong>租浴衣 → 江之島散策＋夕陽拍照 → 18:00 前歸還（或加價延長）。SALA 就在住宿 <strong>Raku</strong> 旁，動線極順、可寄行李！</div>
+    <!-- ===== 6/29 ===== -->
+    <section class="page" id="d29">
+      <div class="page-title"><span class="dot" style="background:var(--d29)"></span>6/29 Mon · 最後一天・回家</div>
+      <section class="day">
+        <div class="day-head"><span class="date-tag">6/29 Mon</span>最後一天・買買買 &amp; 回家囉！</div>
+        <table>
+          <tr><td class="time">06:00</td><td class="act">成田東武機場酒店 退房（飯店有機場接駁）</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=成田東武機場酒店+Narita+Tobu+Hotel+Airport" target="_blank">📍</a></td></tr>
+          <tr><td class="time">06:30</td><td class="act">前往成田機場</td><td class="map"><a href="https://www.google.com/maps/search/?api=1&query=成田機場" target="_blank">📍</a></td></tr>
+          <tr><td class="time">09:15</td><td class="act">成田機場離境</td><td class="map">—</td></tr>
+        </table>
+        <div class="note">💡 期待下次的旅行 ❤️</div>
+      </section>
+      <a class="day-link" data-target="transit">🚃 查看 6/29 交通方式</a>
+    </section>
 
-    <strong style="display:block;margin:18px 0 8px;">🔗 參考店家</strong>
-    <ul class="clean">
-      <li><a href="https://enoshima-kimono.jp/yukata-plan" target="_blank">江之島 海着物レンタル SALA</a></li>
-      <li><a href="https://www.kamakura-komachi.jp/" target="_blank">鎌倉きもの小町</a></li>
-      <li><a href="https://kimono-miyako.jp/rental-kimono/yukata/" target="_blank">鎌倉 きものレンタル都</a></li>
-      <li><a href="https://ewha-yifu.com/shops/kamakura/" target="_blank">梨花和服 鎌倉店</a></li>
-      <li><a href="https://aiwafuku.com/useful/price_asakusa_kimonorental/" target="_blank">淺草 愛和服（價格攻略）</a></li>
-    </ul>
-  </div>
+    <!-- ===== 交通方式 ===== -->
+    <section class="page" id="transit">
+      <div class="page-title">🚃 每日交通方式</div>
+      <div class="page-sub">各行程點間最佳大眾運輸</div>
+      <div class="tips">
+        🧡 <b>通用建議：</b>全程備一張 <b>Suica / PASMO</b>（嗶卡進出最方便，金額為 IC 票價）。鎌倉江之島可考慮 <b>「江之島-鎌倉周遊券」/「江之電一日券」</b>。跨區長程（如往返鎌倉、回成田）班次與月台請以 <b>乘換案內 / Google Map</b> 即時查詢為準；以下時間／票價為概估。<br>
+        🚆 每段都附 <b>「Google 大眾運輸路線」</b>按鈕，點下去會直接開 Google Maps 的點到點即時班次與推薦搭乘方式。
+      </div>
 
-  <div class="grid2">
-    <div>
-      <h2 class="block" id="stay">🏨 住宿</h2>
+      <section class="leg-day" style="border-top-color:var(--d23)">
+        <div class="day-head2"><span class="tag" style="background:var(--d23)">6/23 二</span>抵達東京</div>
+        <div class="leg">
+          <div class="route">成田機場 <span class="arr">→</span> 上野（飯店）</div>
+          <div class="how"><span class="badge b-nex">京成 Skyliner</span>最快：Skyliner 至日暮里/上野約 <b>45 分</b>（¥2,570），轉乘到上野站南。<br><span class="badge b-jr">JR N'EX</span>替代：成田特快 N'EX 至東京站再轉 JR 至上野。</div>
+          <div class="meta-line"><span>⏱ 約 45–70 分</span><span>💴 ¥1,300–2,570</span><span>🎒 行李多建議 Skyliner</span></div>
+          <a class="gmap-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=成田空港&destination=上野駅&travelmode=transit"><span class="ic">🚆</span>Google 大眾運輸路線</a>
+        </div>
+      </section>
+
+      <section class="leg-day" style="border-top-color:var(--d24)">
+        <div class="day-head2"><span class="tag" style="background:var(--d24)">6/24 三</span>鎌倉・江之島 DAY 1</div>
+        <div class="leg">
+          <div class="route">上野 <span class="arr">→</span> 鎌倉</div>
+          <div class="how"><span class="badge b-jr">JR 上野東京線→橫須賀線</span>上野搭 JR 至戸塚/大船轉橫須賀線到鎌倉（或直達橫須賀線）。</div>
+          <div class="meta-line"><span>⏱ 約 60–75 分</span><span>💴 ¥1,034（IC）</span><span>🔁 換乘 1 次</span></div>
+          <a class="gmap-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=上野駅&destination=鎌倉駅&travelmode=transit"><span class="ic">🚆</span>Google 大眾運輸路線</a>
+        </div>
+        <div class="leg">
+          <div class="route">鎌倉 <span class="arr">→</span> 鎌倉高校前 <span class="arr">→</span> 七里濱 <span class="arr">→</span> 江之島</div>
+          <div class="how"><span class="badge b-eno">江ノ電</span>鎌倉站搭江ノ電一線串起：鎌倉高校前（海景平交道）、七里ヶ浜（bills）、江ノ島站。建議買 <b>江之電一日券</b>。</div>
+          <div class="meta-line"><span>⏱ 各站 4–10 分</span><span>💴 一日券 ¥800</span><span>🌅 江之島看夕陽</span></div>
+          <a class="gmap-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=鎌倉駅&destination=江ノ島駅&travelmode=transit"><span class="ic">🚆</span>Google 大眾運輸路線</a>
+        </div>
+        <div class="leg">
+          <div class="route">江之島 <span class="arr">→</span> Raku（片瀨海岸）</div>
+          <div class="how"><span class="badge b-walk">步行</span>江之島一帶步行可達民宿；或江ノ電/小田急一站。</div>
+          <div class="meta-line"><span>🚶 約 5–15 分</span></div>
+          <a class="gmap-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=江ノ島駅&destination=片瀬海岸+藤沢&travelmode=transit"><span class="ic">🚆</span>Google 大眾運輸路線</a>
+        </div>
+      </section>
+
+      <section class="leg-day" style="border-top-color:var(--d25)">
+        <div class="day-head2"><span class="tag" style="background:var(--d25)">6/25 四</span>鎌倉・江之島 DAY 2</div>
+        <div class="leg">
+          <div class="route">片瀨海岸 <span class="arr">→</span> 鎌倉（熊見亭）</div>
+          <div class="how"><span class="badge b-eno">江ノ電</span>江ノ島站搭江ノ電回鎌倉。</div>
+          <div class="meta-line"><span>⏱ 約 25 分</span><span>💴 ¥260（或續用一日券）</span></div>
+          <a class="gmap-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=片瀬海岸+藤沢&destination=鎌倉駅&travelmode=transit"><span class="ic">🚆</span>Google 大眾運輸路線</a>
+        </div>
+        <div class="leg">
+          <div class="route">鎌倉 <span class="arr">→</span> 江之島散策 <span class="arr">→</span> 七里濱</div>
+          <div class="how"><span class="badge b-eno">江ノ電</span>沿線往返，續逛江之島、Espresso D Works（七里ヶ浜）。</div>
+          <div class="meta-line"><span>⏱ 各站數分</span><span>💴 一日券最划算</span></div>
+          <a class="gmap-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=鎌倉駅&destination=七里ヶ浜駅&travelmode=transit"><span class="ic">🚆</span>Google 大眾運輸路線</a>
+        </div>
+        <div class="leg">
+          <div class="route">七里濱 / 江之島 <span class="arr">→</span> 小町通（鎌倉）</div>
+          <div class="how"><span class="badge b-eno">江ノ電</span>回鎌倉站，小町通就在站旁。</div>
+          <div class="meta-line"><span>⏱ 約 10–25 分</span></div>
+          <a class="gmap-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=七里ヶ浜駅&destination=小町通り&travelmode=transit"><span class="ic">🚆</span>Google 大眾運輸路線</a>
+        </div>
+      </section>
+
+      <section class="leg-day" style="border-top-color:var(--d26)">
+        <div class="day-head2"><span class="tag" style="background:var(--d26)">6/26 五</span>銀座美食・台場夜景</div>
+        <div class="leg">
+          <div class="route">江之島／片瀨海岸 <span class="arr">→</span> 銀座</div>
+          <div class="how"><span class="badge b-odk">小田急江ノ島線</span><span class="badge b-jr">JR 東海道線</span>片瀨江ノ島→藤沢（小田急約 7 分）→ JR 東海道線至新橋 →（步行或東京メトロ銀座線一站到銀座）。</div>
+          <div class="meta-line"><span>⏱ 約 75–90 分</span><span>💴 約 ¥1,100</span><span>🔁 換乘 1–2 次</span></div>
+          <a class="gmap-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=片瀬江ノ島駅&destination=銀座駅&travelmode=transit"><span class="ic">🚆</span>Google 大眾運輸路線</a>
+        </div>
+        <div class="leg">
+          <div class="route">銀座 <span class="arr">→</span> 築地場外市場</div>
+          <div class="how"><span class="badge b-walk">步行</span>或東京メトロ日比谷線銀座→築地一站。</div>
+          <div class="meta-line"><span>🚶 約 12 分</span><span>🚇 1 站</span></div>
+          <a class="gmap-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=銀座駅&destination=築地場外市場&travelmode=transit"><span class="ic">🚆</span>Google 大眾運輸路線</a>
+        </div>
+        <div class="leg">
+          <div class="route">築地 <span class="arr">→</span> 台場</div>
+          <div class="how"><span class="badge b-metro">大江戶線+百合海鷗號</span>築地市場→汐留，轉 <b>百合海鷗號 (Yurikamome)</b> 過彩虹大橋到台場（海景路線推薦）。</div>
+          <div class="meta-line"><span>⏱ 約 30–40 分</span><span>💴 約 ¥500–650</span><span>🎡 摩天輪夜景</span></div>
+          <a class="gmap-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=築地場外市場&destination=お台場海浜公園駅&travelmode=transit"><span class="ic">🚆</span>Google 大眾運輸路線</a>
+        </div>
+      </section>
+
+      <section class="leg-day" style="border-top-color:var(--d27)">
+        <div class="day-head2"><span class="tag" style="background:var(--d27)">6/27 六</span>摩登東京・夜景巡禮</div>
+        <div class="leg">
+          <div class="route">飯店 <span class="arr">→</span> 代官山</div>
+          <div class="how"><span class="badge b-jr">JR 山手線</span>至澀谷，轉東急東橫線一站到代官山（或澀谷步行 15 分）。</div>
+          <div class="meta-line"><span>⏱ 視出發地</span><span>🚇 代官山站徒步即達</span></div>
+          <a class="gmap-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=上野駅&destination=代官山駅&travelmode=transit"><span class="ic">🚆</span>Google 大眾運輸路線</a>
+        </div>
+        <div class="leg">
+          <div class="route">代官山 <span class="arr">→</span> 澀谷 SKY</div>
+          <div class="how"><span class="badge b-odk">東急東橫線</span>一站到澀谷，SKY 在澀谷 Scramble Square。<span class="badge b-walk">步行</span>約 15 分亦可。</div>
+          <div class="meta-line"><span>⏱ 約 5–15 分</span><span>🌇 日落前上去</span></div>
+          <a class="gmap-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=代官山駅&destination=渋谷スクランブルスクエア&travelmode=transit"><span class="ic">🚆</span>Google 大眾運輸路線</a>
+        </div>
+        <div class="leg">
+          <div class="route">澀谷 <span class="arr">→</span> 下北澤</div>
+          <div class="how"><span class="badge b-odk">京王井之頭線</span>澀谷直達下北澤。</div>
+          <div class="meta-line"><span>⏱ 約 5 分</span><span>💴 ¥140</span></div>
+          <a class="gmap-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=渋谷駅&destination=下北沢駅&travelmode=transit"><span class="ic">🚆</span>Google 大眾運輸路線</a>
+        </div>
+        <div class="leg">
+          <div class="route">下北澤 <span class="arr">→</span> 六本木新城展望台</div>
+          <div class="how"><span class="badge b-odk">小田急→千代田線</span>或回澀谷轉東京メトロ；亦可澀谷搭都營/日比谷線往六本木。</div>
+          <div class="meta-line"><span>⏱ 約 25–35 分</span><span>🌹 夜景浪漫</span><span>＊Stellar Garden 在六本木一帶（午餐）</span></div>
+          <a class="gmap-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=下北沢駅&destination=六本木ヒルズ展望台&travelmode=transit"><span class="ic">🚆</span>Google 大眾運輸路線</a>
+        </div>
+      </section>
+
+      <section class="leg-day" style="border-top-color:var(--d28)">
+        <div class="day-head2"><span class="tag" style="background:var(--d28)">6/28 日</span>經典景點・文青散步</div>
+        <div class="leg">
+          <div class="route">飯店 <span class="arr">→</span> teamLab Borderless（麻布台）<span class="badge" style="background:#4d96ff;margin-left:4px;">8:30</span></div>
+          <div class="how"><span class="badge b-metro">東京メトロ日比谷線</span>神谷町站徒步至麻布台之丘；準時抵達預約時段。</div>
+          <div class="meta-line"><span>🎟️ 已購票 8:30</span></div>
+          <a class="gmap-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=上野駅&destination=teamLab+Borderless+麻布台&travelmode=transit"><span class="ic">🚆</span>Google 大眾運輸路線</a>
+        </div>
+        <div class="leg">
+          <div class="route">麻布台 <span class="arr">→</span> 上野公園</div>
+          <div class="how"><span class="badge b-metro">日比谷線</span>神谷町→上野；或轉銀座線到上野。</div>
+          <div class="meta-line"><span>⏱ 約 25–30 分</span></div>
+          <a class="gmap-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=麻布台ヒルズ&destination=上野公園&travelmode=transit"><span class="ic">🚆</span>Google 大眾運輸路線</a>
+        </div>
+        <div class="leg">
+          <div class="route">上野 <span class="arr">→</span> 秋葉原 <span class="arr">→</span> 淺草</div>
+          <div class="how"><span class="badge b-jr">JR 山手/京濱東北線</span>上野→秋葉原（約 4 分）。<span class="badge b-metro">銀座線</span>淺草線/銀座線往淺草。</div>
+          <div class="meta-line"><span>⏱ 上野→秋葉原 4 分</span><span>⏱ 秋葉原→淺草 約 15 分</span></div>
+          <a class="gmap-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=上野駅&destination=浅草寺&travelmode=transit&waypoints=秋葉原駅"><span class="ic">🚆</span>Google 大眾運輸路線</a>
+        </div>
+        <div class="leg">
+          <div class="route">淺草 <span class="arr">→</span> 摩利支天德大寺（御徒町）</div>
+          <div class="how"><span class="badge b-metro">銀座線</span>淺草→上野/末廣町，德大寺在御徒町 ameyoko 旁。</div>
+          <div class="meta-line"><span>⏱ 約 12 分</span></div>
+          <a class="gmap-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=浅草寺&destination=摩利支天徳大寺&travelmode=transit"><span class="ic">🚆</span>Google 大眾運輸路線</a>
+        </div>
+        <div class="leg">
+          <div class="route">御徒町 <span class="arr">→</span> 豪德寺（世田谷）</div>
+          <div class="how"><span class="badge b-jr">JR</span><span class="badge b-odk">小田急</span>較遠：JR 至新宿轉小田急到豪德寺站（或乘換案內查最短）。<b>⚠️ 此段最長</b>。</div>
+          <div class="meta-line"><span>⏱ 約 45–60 分</span><span>🐱 招財貓</span></div>
+          <a class="gmap-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=御徒町駅&destination=豪徳寺&travelmode=transit"><span class="ic">🚆</span>Google 大眾運輸路線</a>
+        </div>
+        <div class="leg">
+          <div class="route">豪德寺 <span class="arr">→</span> 東京鐵塔・芝公園</div>
+          <div class="how"><span class="badge b-odk">小田急→</span><span class="badge b-metro">大江戶線</span>新宿轉都營大江戶線至赤羽橋（東京鐵塔最近站）。</div>
+          <div class="meta-line"><span>⏱ 約 40–50 分</span></div>
+          <a class="gmap-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=豪徳寺&destination=東京タワー&travelmode=transit"><span class="ic">🚆</span>Google 大眾運輸路線</a>
+        </div>
+        <div class="leg">
+          <div class="route">東京（市區）<span class="arr">→</span> 成田東武機場酒店</div>
+          <div class="how"><span class="badge b-nex">Skyliner / N'EX</span>京成上野/日暮里搭 Skyliner，或東京站 N'EX 至成田機場，飯店有接駁。</div>
+          <div class="meta-line"><span>⏱ 約 60–90 分</span><span>💴 ¥1,300–2,570</span><span>🏨 末晚</span></div>
+          <a class="gmap-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=東京タワー&destination=成田東武ホテルエアポート&travelmode=transit"><span class="ic">🚆</span>Google 大眾運輸路線</a>
+        </div>
+      </section>
+
+      <section class="leg-day" style="border-top-color:var(--d29)">
+        <div class="day-head2"><span class="tag" style="background:var(--d29)">6/29 一</span>回家</div>
+        <div class="leg">
+          <div class="route">成田東武機場酒店 <span class="arr">→</span> 成田機場</div>
+          <div class="how"><span class="badge b-bus">飯店接駁巴士</span>東武機場酒店有免費接駁巴士到各航廈，約 10 分。</div>
+          <div class="meta-line"><span>🚌 免費接駁</span><span>✈ 09:15 離境（提早 2–3 小時抵達）</span></div>
+          <a class="gmap-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=成田東武ホテルエアポート&destination=成田空港&travelmode=transit"><span class="ic">🚆</span>Google 大眾運輸路線</a>
+        </div>
+      </section>
+
+      <div class="tips">
+        💡 <b>票券建議總整理：</b><br>
+        ① <b>Suica/PASMO</b>：全程通用，市區移動主力。<br>
+        ② <b>江之電一日券（のりおりくん ¥800）</b>：6/24–6/25 鎌倉江之島沿線無限搭，划算。<br>
+        ③ <b>成田往返</b>：行李多選 <b>京成 Skyliner</b>（快又有座位）；想直達東京站選 <b>JR N'EX</b>。<br>
+        ④ 6/28 行程橫跨麻布台→上野→淺草→世田谷→東京鐵塔，<b>移動量大</b>，務必用乘換案內抓即時班次，必要時刪減一兩點。
+      </div>
+    </section>
+
+    <!-- ===== 路徑示意圖 ===== -->
+    <section class="page" id="route">
+      <div class="page-title">🗺️ 旅遊路徑示意圖</div>
+      <div class="page-sub">整趟動線概覽（示意・非實際比例）</div>
+      <div class="map-card">
+        <div class="scroll-hint">← 圖可左右滑動 →</div>
+        <svg class="route-svg" viewBox="0 0 800 560" xmlns="http://www.w3.org/2000/svg" font-family="inherit">
+          <defs>
+            <marker id="arrow" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
+              <path d="M0,0 L6,3 L0,6 z" fill="#b7a3ad"/>
+            </marker>
+          </defs>
+          <rect x="0" y="0" width="800" height="560" fill="#fbf6f8" rx="16"/>
+          <text x="400" y="30" text-anchor="middle" font-size="13" fill="#bbabb3" opacity="0.7">（示意圖・非實際比例，僅表達移動順序與相對方位）</text>
+          <ellipse cx="170" cy="430" rx="135" ry="92" fill="#e8f5f3" stroke="#bfe3dd" stroke-dasharray="5 4"/>
+          <text x="170" y="528" text-anchor="middle" font-size="13" fill="#2a9d8f" font-weight="700">鎌倉・江之島（西南）</text>
+          <ellipse cx="430" cy="250" rx="215" ry="150" fill="#fdeef4" stroke="#f3c8da" stroke-dasharray="5 4"/>
+          <text x="430" y="118" text-anchor="middle" font-size="13" fill="#e76f9b" font-weight="700">東京市區</text>
+          <ellipse cx="710" cy="170" rx="78" ry="70" fill="#fdf0e6" stroke="#f4cda3" stroke-dasharray="5 4"/>
+          <text x="710" y="92" text-anchor="middle" font-size="13" fill="#d98a3c" font-weight="700">成田（東）</text>
+          <path d="M710,150 C560,120 480,150 360,200" fill="none" stroke="var(--d23)" stroke-width="3.5" stroke-linecap="round" marker-end="url(#arrow)"/>
+          <path d="M345,210 C260,290 210,330 185,355" fill="none" stroke="var(--d24)" stroke-width="3.5" stroke-linecap="round" marker-end="url(#arrow)"/>
+          <path d="M215,400 C320,370 420,330 500,300" fill="none" stroke="var(--d26)" stroke-width="3.5" stroke-linecap="round" marker-end="url(#arrow)"/>
+          <path d="M430,300 C360,330 350,250 415,235" fill="none" stroke="var(--d27)" stroke-width="3.5" stroke-linecap="round" marker-end="url(#arrow)"/>
+          <path d="M470,235 C600,210 650,185 690,180" fill="none" stroke="var(--d28)" stroke-width="3.5" stroke-linecap="round" marker-end="url(#arrow)"/>
+          <path d="M710,200 C725,250 730,300 720,350" fill="none" stroke="var(--d29)" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="2 6" marker-end="url(#arrow)"/>
+          <text x="748" y="360" font-size="12" fill="var(--d29)">✈ 回家</text>
+          <circle cx="712" cy="148" r="11" fill="var(--d23)"/>
+          <text x="712" y="135" text-anchor="middle" font-size="12" font-weight="700" fill="#7a5a3a">✈ 成田機場</text>
+          <circle cx="350" cy="205" r="11" fill="var(--d23)"/>
+          <text x="350" y="190" text-anchor="middle" font-size="12" font-weight="700" fill="#4a3b44">🏨 上野（首晚）</text>
+          <circle cx="180" cy="360" r="13" fill="var(--d24)"/>
+          <text x="180" y="345" text-anchor="middle" font-size="12" font-weight="700" fill="#1f6f64">🏨 江之島 Raku（2 晚）</text>
+          <text x="180" y="408" text-anchor="middle" font-size="11" fill="#2a9d8f">鎌倉・七里濱・江之島</text>
+          <circle cx="505" cy="300" r="10" fill="var(--d26)"/>
+          <text x="505" y="320" text-anchor="middle" font-size="12" font-weight="700" fill="#b14b73">銀座・築地・台場</text>
+          <circle cx="430" cy="302" r="10" fill="var(--d27)"/>
+          <text x="408" y="345" text-anchor="middle" font-size="12" font-weight="700" fill="#6b3fa0">代官山・澀谷・六本木</text>
+          <circle cx="440" cy="232" r="10" fill="var(--d28)"/>
+          <text x="430" y="218" text-anchor="middle" font-size="12" font-weight="700" fill="#2f5fb0">上野・淺草・世田谷・東京鐵塔</text>
+          <circle cx="710" cy="200" r="11" fill="var(--d28)"/>
+          <text x="710" y="225" text-anchor="middle" font-size="12" font-weight="700" fill="#2f5fb0">🏨 成田（末晚）</text>
+        </svg>
+        <div class="legend">
+          <span><i class="dot" style="background:var(--d23)"></i>6/23・29 移動日</span>
+          <span><i class="dot" style="background:var(--d24)"></i>6/24–25 鎌倉江之島</span>
+          <span><i class="dot" style="background:var(--d26)"></i>6/26 銀座台場</span>
+          <span><i class="dot" style="background:var(--d27)"></i>6/27 摩登夜景</span>
+          <span><i class="dot" style="background:var(--d28)"></i>6/28 經典景點</span>
+        </div>
+      </div>
+
+      <h3 style="color:var(--pink);margin:24px 0 12px;">每日路線</h3>
+      <div class="day-route" style="border-left-color:var(--d23)"><h3><span class="tag" style="background:var(--d23)">6/23 二</span>抵達東京</h3><div class="path-text">✈ 成田機場 <span class="arr">→</span> N'EX／利木津巴士 <span class="arr">→</span> 上野</div><div class="hotel">🏨 上野站南 APA 飯店</div></div>
+      <div class="day-route" style="border-left-color:var(--d24)"><h3><span class="tag" style="background:var(--d24)">6/24 三</span>鎌倉・江之島 DAY 1</h3><div class="path-text">上野 <span class="arr">→</span> 鎌倉 <span class="arr">→</span> 鎌倉高校前 <span class="arr">→</span> 小町通 <span class="arr">→</span> 七里濱 <span class="arr">→</span> 江之島（夕陽）</div><div class="hotel">🏨 江之島 Raku（片瀨海岸）</div></div>
+      <div class="day-route" style="border-left-color:var(--d25)"><h3><span class="tag" style="background:var(--d25)">6/25 四</span>鎌倉・江之島 DAY 2</h3><div class="path-text">Raku <span class="arr">→</span> 熊見亭 <span class="arr">→</span> 江之島散策 <span class="arr">→</span> 七里濱 <span class="arr">→</span> 小町通</div><div class="hotel">🏨 江之島 Raku（片瀨海岸）</div></div>
+      <div class="day-route" style="border-left-color:var(--d26)"><h3><span class="tag" style="background:var(--d26)">6/26 五</span>銀座美食・台場夜景</h3><div class="path-text">江之島 <span class="arr">→</span> 銀座（敘敘苑）<span class="arr">→</span> 築地場外市場 <span class="arr">→</span> 台場（夜景）</div><div class="hotel">🏨 東京市區（押上／淺草建議）</div></div>
+      <div class="day-route" style="border-left-color:var(--d27)"><h3><span class="tag" style="background:var(--d27)">6/27 六</span>摩登東京・夜景巡禮</h3><div class="path-text">代官山 <span class="arr">→</span> Stellar Garden <span class="arr">→</span> 澀谷 SKY <span class="arr">→</span> 下北澤 <span class="arr">→</span> 六本木展望台</div><div class="hotel">🏨 東京市區（押上／淺草建議）</div></div>
+      <div class="day-route" style="border-left-color:var(--d28)"><h3><span class="tag" style="background:var(--d28)">6/28 日</span>經典景點・文青散步</h3><div class="path-text">teamLab Borderless（麻布台）<span class="arr">→</span> 上野公園 <span class="arr">→</span> 秋葉原 <span class="arr">→</span> 淺草寺 <span class="arr">→</span> 摩利支天德大寺 <span class="arr">→</span> 豪德寺 <span class="arr">→</span> 東京鐵塔 <span class="arr">→</span> 成田</div><div class="hotel">🏨 成田東武機場酒店</div></div>
+      <div class="day-route" style="border-left-color:var(--d29)"><h3><span class="tag" style="background:var(--d29)">6/29 一</span>回家</h3><div class="path-text">成田東武機場酒店 <span class="arr">→</span> 成田機場 <span class="arr">→</span> ✈ 離境</div></div>
+    </section>
+
+    <!-- ===== 互動地圖 ===== -->
+    <section class="page" id="map">
+      <div class="page-title">🗾 互動地圖（真實比例）</div>
+      <div class="page-sub">點圖釘看景點資訊，點下方日期可開關當天路線</div>
+      <div class="map-toolbar">
+        <span class="back" id="fitBtn">🔍 全覽</span>
+        <div class="legend-bar" id="legendBar" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+      </div>
+      <div id="leafletMap"></div>
+      <div class="map-note">底圖 © OpenStreetMap 貢獻者 ｜ 點圖釘看景點資訊，點上方日期可開關當天路線。</div>
+    </section>
+
+    <!-- ===== 住宿 ===== -->
+    <section class="page" id="stay">
+      <div class="page-title">🏨 住宿</div>
       <div class="card">
         <strong>✅ 已訂｜上野站南 APA 飯店 ⭐⭐⭐（抵達首晚）</strong>
         <ul class="clean" style="margin-top:10px;">
@@ -373,9 +594,53 @@
         </ul>
         <div class="note" style="margin:14px 0 0;">推薦：景觀飯店 / 文青設計旅店 / 中價位質感飯店</div>
       </div>
-    </div>
-    <div>
-      <h2 class="block" id="shop">🛍️ 必買清單</h2>
+    </section>
+
+    <!-- ===== 和服攻略 ===== -->
+    <section class="page" id="kimono">
+      <div class="page-title">👘 和服／浴衣租借攻略（2026）</div>
+      <div class="card">
+        <div class="warn" style="margin-top:0;">🌸 你們是 <strong>6 月</strong>出遊 —— 鎌倉・江之島 <strong>6～9 月為「浴衣（夏季和服）」季</strong>，配海景最對味；淺草則全年是經典「和服」體驗地。</div>
+        <strong style="display:block;margin:16px 0 8px;">🎯 給你們行程的兩個方案</strong>
+        <div class="card-scroll" style="overflow-x:auto;">
+          <div class="scroll-hint">← 表格可左右滑動 →</div>
+          <table class="compare-table" style="min-width:0;">
+            <thead><tr><th>方案</th><th>地點</th><th>對應行程</th><th>氛圍</th></tr></thead>
+            <tbody>
+              <tr><td><strong>A · 浴衣+海景</strong> ⭐</td><td>江之島／鎌倉</td><td>6/24–6/25</td><td>湘南海岸、江之島夕陽，夏日浴衣最應景</td></tr>
+              <tr><td>B · 和服+下町</td><td>淺草</td><td>6/28</td><td>雷門、仲見世、淺草寺經典街景</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <strong style="display:block;margin:18px 0 8px;">💰 價格行情（含著付＝穿衣）</strong>
+        <ul class="clean">
+          <li><strong>江之島 SALA</strong>（片瀨海岸，<em>就在 Raku 住宿旁！</em>）：浴衣 <strong>¥2,800</strong>、情侶 ¥5,500、男性 ¥3,000（全包・手ぶら OK）</li>
+          <li><strong>鎌倉</strong>（きもの小町／都／梨花和服）：全包約 <strong>¥3,000–4,500</strong>，情侶 ¥6,600 起</li>
+          <li><strong>淺草和服</strong>：女性 ¥3,000–6,000、情侶 ¥6,500–12,000、學割 ¥3,300 起；髮型 +¥1,000–2,000</li>
+        </ul>
+        <strong style="display:block;margin:18px 0 8px;">✅ 五大重點</strong>
+        <ul class="clean">
+          <li>🗓️ <strong>務必線上事前預約</strong>（有折扣、免排隊）</li>
+          <li>💴 確認是不是「<strong>全包價</strong>」（髮型／小物／包常另收費）</li>
+          <li>👫 善用 <strong>學割 / 情侶割 / 團體割</strong>，可省 ¥1,000–2,000</li>
+          <li>⏰ 一般 17:30–18:00 歸還；+¥2,000 可<strong>延長或隔天還</strong>（適合拍夕陽夜景）</li>
+          <li>⌛ 預留 <strong>45–60 分</strong>著裝＋選衣＋髮型時間</li>
+        </ul>
+        <div class="warn">📅 <strong>建議排法（方案 A）：</strong>6/24 下午抵江之島 → 於 <strong>SALA（片瀨海岸）</strong>租浴衣 → 江之島散策＋夕陽拍照 → 18:00 前歸還（或加價延長）。SALA 就在住宿 <strong>Raku</strong> 旁，動線極順、可寄行李！</div>
+        <strong style="display:block;margin:18px 0 8px;">🔗 參考店家</strong>
+        <ul class="clean">
+          <li><a href="https://enoshima-kimono.jp/yukata-plan" target="_blank">江之島 海着物レンタル SALA</a></li>
+          <li><a href="https://www.kamakura-komachi.jp/" target="_blank">鎌倉きもの小町</a></li>
+          <li><a href="https://kimono-miyako.jp/rental-kimono/yukata/" target="_blank">鎌倉 きものレンタル都</a></li>
+          <li><a href="https://ewha-yifu.com/shops/kamakura/" target="_blank">梨花和服 鎌倉店</a></li>
+          <li><a href="https://aiwafuku.com/useful/price_asakusa_kimonorental/" target="_blank">淺草 愛和服（價格攻略）</a></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== 必買清單 ===== -->
+    <section class="page" id="shop">
+      <div class="page-title">🛍️ 必買清單</div>
       <div class="card">
         <label class="check"><input type="checkbox"><span>Allie 水潤 UV 防曬水凝乳</span></label>
         <label class="check"><input type="checkbox"><span>Ereru 雙重 PDRN 光耀精華</span></label>
@@ -383,41 +648,182 @@
         <label class="check"><input type="checkbox"><span>Dior 珍藏版 3D 雛菊蜜粉餅</span></label>
         <label class="check"><input type="checkbox"><span>Biore 貓掌防曬</span></label>
       </div>
-    </div>
-  </div>
+    </section>
 
-  <h2 class="block" id="note">📝 旅行小筆記 &amp; 目標</h2>
-  <div class="grid2">
-    <div class="card">
-      <strong>💡 實用提醒</strong>
-      <ul class="clean" style="margin-top:10px;">
-        <li>🧡 建議下載：Google Map、乘換案內</li>
-        <li>🧡 購買交通卡：Suica / Pasmo</li>
-        <li>🧡 teamLab / 澀谷 SKY 需提前預約！</li>
-        <li>🧡 多喝水、記得防曬，慢慢走才好吃好玩 ♡</li>
-      </ul>
-    </div>
-    <div class="card">
-      <strong>🎯 我們的旅行小目標</strong>
-      <div style="margin-top:10px;">
-        <label class="check"><input type="checkbox"><span>一起看日出日落</span></label>
-        <label class="check"><input type="checkbox"><span>吃遍美食</span></label>
-        <label class="check"><input type="checkbox"><span>留下美好回憶</span></label>
-        <label class="check"><input type="checkbox"><span>拍很多很多照片</span></label>
+    <!-- ===== 拍照計畫 ===== -->
+    <section class="page" id="photo">
+      <div class="page-title">📸 拍照計畫 &amp; 待確認</div>
+      <div class="card">
+        <label class="check"><input type="checkbox"><span><strong>互惠攝影師</strong>：已約好攝影師，<strong>尚未確定第幾天拍照</strong> ⏳（待喬日期）</span></label>
+        <label class="check"><input type="checkbox"><span><strong>和服拍照</strong>：想找一天穿和服拍照 —— 或許就安排在互惠攝影的同一天 👘</span></label>
+        <label class="check"><input type="checkbox"><span>確定日期後，把拍照行程填進當天的時間表</span></label>
+        <div class="warn">💡 建議：和服體驗多在淺草、鎌倉一帶；若搭配互惠攝影，可考慮 <strong>6/24–6/25 鎌倉江之島</strong>（和服＋海景）或 <strong>6/28 淺草</strong>（雷門＋和服）的氛圍。</div>
       </div>
-    </div>
-  </div>
+    </section>
 
-  <footer>Bernie &amp; Nydia · 東京旅行手札 · 6/23–6/29 💕</footer>
+    <!-- ===== 旅行筆記 ===== -->
+    <section class="page" id="note">
+      <div class="page-title">📝 旅行小筆記 &amp; 目標</div>
+      <div class="grid2">
+        <div class="card">
+          <strong>💡 實用提醒</strong>
+          <ul class="clean" style="margin-top:10px;">
+            <li>🧡 行程表每個地點旁的 <strong>🚆</strong> 可直接開 Google 大眾運輸路線（從上一站到該站）；<strong>📍</strong> 則是該地點位置</li>
+            <li>🧡 建議下載：Google Map、乘換案內</li>
+            <li>🧡 購買交通卡：Suica / Pasmo</li>
+            <li>🧡 teamLab / 澀谷 SKY 需提前預約！</li>
+            <li>🧡 多喝水、記得防曬，慢慢走才好吃好玩 ♡</li>
+          </ul>
+        </div>
+        <div class="card">
+          <strong>🎯 我們的旅行小目標</strong>
+          <div style="margin-top:10px;">
+            <label class="check"><input type="checkbox"><span>一起看日出日落</span></label>
+            <label class="check"><input type="checkbox"><span>吃遍美食</span></label>
+            <label class="check"><input type="checkbox"><span>留下美好回憶</span></label>
+            <label class="check"><input type="checkbox"><span>拍很多很多照片</span></label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>Bernie &amp; Nydia · 東京旅行手札 · 6/23–6/29 💕</footer>
+  </div>
+  </main>
 </div>
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
-  // 記住勾選狀態（localStorage）
+  // ===== 章節切換 =====
+  const sidebar = document.getElementById('sidebar');
+  const scrim = document.getElementById('scrim');
+  const navItems = Array.from(document.querySelectorAll('.nav-item'));
+  const pages = Array.from(document.querySelectorAll('.page'));
+  const isMobile = () => window.matchMedia('(max-width: 820px)').matches;
+
+  function showSection(id, push) {
+    const target = document.getElementById(id) ? id : 'overview';
+    pages.forEach(p => p.classList.toggle('active', p.id === target));
+    navItems.forEach(n => n.classList.toggle('active', n.dataset.target === target));
+    if (push !== false && location.hash !== '#' + target) {
+      history.replaceState(null, '', '#' + target);
+    }
+    window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
+    if (target === 'map') initMap();
+    if (isMobile()) closeSidebar();
+  }
+
+  // 目錄 + 當日交通連結
+  document.querySelectorAll('[data-target]').forEach(el => {
+    el.addEventListener('click', e => { e.preventDefault(); showSection(el.dataset.target); });
+  });
+
+  // ===== 側欄開關 =====
+  function openSidebar() { sidebar.classList.remove('collapsed'); if (isMobile()) scrim.classList.add('show'); localStorage.setItem('sidebar_open', '1'); }
+  function closeSidebar() { sidebar.classList.add('collapsed'); scrim.classList.remove('show'); localStorage.setItem('sidebar_open', '0'); }
+  function toggleSidebar() { sidebar.classList.contains('collapsed') ? openSidebar() : closeSidebar(); }
+  document.getElementById('menuBtn').addEventListener('click', toggleSidebar);
+  scrim.addEventListener('click', closeSidebar);
+
+  // 初始：桌機依記憶（預設開），手機預設收起
+  if (isMobile() || localStorage.getItem('sidebar_open') === '0') {
+    sidebar.classList.add('collapsed');
+  }
+
+  window.addEventListener('hashchange', () => showSection(location.hash.slice(1) || 'overview', false));
+  showSection(location.hash.slice(1) || 'overview', false);
+
+  // ===== checkbox 記憶 =====
   document.querySelectorAll('input[type=checkbox]').forEach((box, i) => {
     const key = 'trip_check_' + i;
     box.checked = localStorage.getItem(key) === '1';
     box.addEventListener('change', () => localStorage.setItem(key, box.checked ? '1' : '0'));
   });
+
+  // ===== 互動地圖（延遲初始化）=====
+  const DAYS = {
+    "6/23": { color:"#f4a261", label:"6/23 抵達" },
+    "6/24": { color:"#2a9d8f", label:"6/24 鎌倉江之島1" },
+    "6/25": { color:"#21867a", label:"6/25 鎌倉江之島2" },
+    "6/26": { color:"#e76f9b", label:"6/26 銀座台場" },
+    "6/27": { color:"#9b6dd6", label:"6/27 摩登夜景" },
+    "6/28": { color:"#4d96ff", label:"6/28 經典景點" },
+    "6/29": { color:"#d98a3c", label:"6/29 回家" }
+  };
+  const POINTS = [
+    ["6/23","成田機場（抵達）",35.7720,140.3929,"🏨 當晚：上野站南 APA 飯店"],
+    ["6/23","上野站南 APA 飯店",35.7066,139.7780,"🏨 6/23→6/24｜上野 6-7-21"],
+    ["6/24","鎌倉駅",35.3192,139.5503,""],
+    ["6/24","鎌倉高校前駅",35.3083,139.4937,"江ノ電・海景平交道"],
+    ["6/24","小町通り",35.3206,139.5536,"商店街・逛吃"],
+    ["6/24","Cafe Yoridocoro",35.3000,139.4990,"午餐・吻仔魚飯"],
+    ["6/24","七里ヶ浜",35.3066,139.5060,"海岸散步"],
+    ["6/24","bills 七里濱",35.3079,139.5036,"下午茶・鬆餅"],
+    ["6/24","江の島",35.2996,139.4807,"看夕陽 🌅"],
+    ["6/24","Raku（民宿）",35.3110,139.4853,"🏨 6/24→6/25｜片瀨海岸 2-13-4"],
+    ["6/25","熊見亭",35.3245,139.5530,"鎌倉美食"],
+    ["6/25","江の島散策",35.2996,139.4807,""],
+    ["6/25","Espresso D Works 七里濱",35.3082,139.5040,""],
+    ["6/26","銀座三越（敘敘苑）",35.6717,139.7650,"燒肉午餐"],
+    ["6/26","築地場外市場",35.6655,139.7707,"海鮮"],
+    ["6/26","台場（夜景）",35.6297,139.7740,"摩天輪・夜景"],
+    ["6/27","代官山",35.6485,139.6993,"咖啡散策"],
+    ["6/27","Stellar Garden Sky Bar",35.6586,139.7454,"高空酒吧・東京鐵塔景"],
+    ["6/27","澀谷 SKY",35.6580,139.7016,"觀景台・日落"],
+    ["6/27","下北澤",35.6613,139.6680,"古著小店"],
+    ["6/27","六本木新城展望台",35.6605,139.7292,"夜景 🌹"],
+    ["6/28","teamLab Borderless（麻布台）",35.6595,139.7416,"🎟️ 8:30 已購票"],
+    ["6/28","上野公園",35.7156,139.7745,""],
+    ["6/28","秋葉原電氣街",35.6987,139.7730,"電器・動漫"],
+    ["6/28","淺草寺・雷門",35.7148,139.7967,""],
+    ["6/28","摩利支天德大寺",35.7065,139.7745,"祈福・除厄"],
+    ["6/28","豪德寺",35.6470,139.6470,"招財貓"],
+    ["6/28","東京鐵塔・芝公園",35.6586,139.7454,""],
+    ["6/29","成田機場（離境）",35.7720,140.3929,"✈ 回家"]
+  ];
+
+  let map = null, allLatLngs = [], mapInited = false;
+  function initMap() {
+    if (mapInited) { map.invalidateSize(); fitAll(); return; }
+    mapInited = true;
+    map = L.map('leafletMap', { scrollWheelZoom:true });
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom:19, attribution:'© OpenStreetMap' }).addTo(map);
+    const layers = {};
+    Object.keys(DAYS).forEach(day => {
+      const g = L.layerGroup().addTo(map);
+      layers[day] = g;
+      const pts = POINTS.filter(p => p[0] === day);
+      const line = [];
+      pts.forEach((p, i) => {
+        const [d,name,lat,lng,note] = p;
+        const latlng = [lat,lng];
+        line.push(latlng); allLatLngs.push(latlng);
+        const icon = L.divIcon({ className:'', html:`<div class="pin-num" style="border-color:${DAYS[day].color};color:${DAYS[day].color}">${i+1}</div>`, iconSize:[26,26], iconAnchor:[13,13] });
+        const q = name.replace(/[（(].*?[）)]/g, '').trim() || name;
+        const gmap = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
+        L.marker(latlng, {icon}).addTo(g)
+          .bindPopup(`<b>${day} #${i+1}</b><br><b style="color:#4a3b44;font-size:1rem">${name}</b>${note?'<br>'+note:''}<br><a href="${gmap}" target="_blank" style="display:inline-block;margin-top:6px;color:#4d96ff;font-weight:700;text-decoration:none;">📍 在 Google 地圖開啟</a>`);
+      });
+      if (line.length > 1) L.polyline(line, { color:DAYS[day].color, weight:3.5, opacity:.75, dashArray:'1 0' }).addTo(g);
+    });
+    fitAll();
+    document.getElementById('fitBtn').onclick = fitAll;
+    const bar = document.getElementById('legendBar');
+    Object.keys(DAYS).forEach(day => {
+      const b = document.createElement('span');
+      b.className = 'toggle';
+      b.style.borderColor = DAYS[day].color; b.style.color = DAYS[day].color;
+      b.textContent = DAYS[day].label;
+      b.onclick = () => {
+        if (map.hasLayer(layers[day])) { map.removeLayer(layers[day]); b.classList.add('off'); }
+        else { map.addLayer(layers[day]); b.classList.remove('off'); }
+      };
+      bar.appendChild(b);
+    });
+    setTimeout(() => map.invalidateSize(), 100);
+  }
+  function fitAll(){ if (map && allLatLngs.length) map.fitBounds(L.latLngBounds(allLatLngs).pad(0.08)); }
 </script>
 </body>
 </html>
