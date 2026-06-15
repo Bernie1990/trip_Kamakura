@@ -57,6 +57,14 @@
   .b-mono{background:#c0566f;} .b-nex{background:#c0392b;}
   .meta-line { font-size:.82rem; color:var(--muted); margin-top:5px; }
   .meta-line span { margin-right:12px; }
+  .gmap-btn {
+    display:inline-flex; align-items:center; gap:5px; margin-top:9px;
+    text-decoration:none; font-size:.82rem; font-weight:700;
+    color:#1a73e8; background:#eaf2ff; border:1.5px solid #c9deff;
+    padding:6px 12px; border-radius:14px; transition:.18s;
+  }
+  .gmap-btn:hover { background:#1a73e8; color:#fff; border-color:#1a73e8; }
+  .gmap-btn .ic { font-size:.95rem; }
   footer { text-align:center; margin-top:30px; color:var(--muted); font-size:.85rem; }
   @media (max-width:640px){ header h1{font-size:1.25rem;} .wrap{padding:0 12px;} .leg{padding:12px 14px;} .day-head{padding:12px 14px;font-size:1rem;} }
 </style>
@@ -75,7 +83,8 @@
   </div>
 
   <div class="tips">
-    🧡 <b>通用建議：</b>全程備一張 <b>Suica / PASMO</b>（嗶卡進出最方便，金額為 IC 票價）。鎌倉江之島可考慮 <b>「江之島-鎌倉周遊券」/「江之電一日券」</b>。跨區長程（如往返鎌倉、回成田）班次與月台請以 <b>乘換案內 / Google Map</b> 即時查詢為準；以下時間／票價為概估。
+    🧡 <b>通用建議：</b>全程備一張 <b>Suica / PASMO</b>（嗶卡進出最方便，金額為 IC 票價）。鎌倉江之島可考慮 <b>「江之島-鎌倉周遊券」/「江之電一日券」</b>。跨區長程（如往返鎌倉、回成田）班次與月台請以 <b>乘換案內 / Google Map</b> 即時查詢為準；以下時間／票價為概估。<br>
+    🚆 每段都附 <b>「Google 大眾運輸路線」</b>按鈕，點下去會直接開 Google Maps 的點到點即時班次與推薦搭乘方式。
   </div>
 
   <!-- 6/23 -->
@@ -88,6 +97,7 @@
         <span class="badge b-jr">JR N'EX</span>替代：成田特快 N'EX 至東京站再轉 JR 至上野。
       </div>
       <div class="meta-line"><span>⏱ 約 45–70 分</span><span>💴 ¥1,300–2,570</span><span>🎒 行李多建議 Skyliner</span></div>
+      <a class="gmap-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=成田空港&destination=上野駅&travelmode=transit"><span class="ic">🚆</span>Google 大眾運輸路線</a>
     </div>
   </section>
 
@@ -98,16 +108,19 @@
       <div class="route">上野 <span class="arr">→</span> 鎌倉</div>
       <div class="how"><span class="badge b-jr">JR 上野東京線→橫須賀線</span>上野搭 JR 至戸塚/大船轉橫須賀線到鎌倉（或直達橫須賀線）。</div>
       <div class="meta-line"><span>⏱ 約 60–75 分</span><span>💴 ¥1,034（IC）</span><span>🔁 換乘 1 次</span></div>
+      <a class="gmap-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=上野駅&destination=鎌倉駅&travelmode=transit"><span class="ic">🚆</span>Google 大眾運輸路線</a>
     </div>
     <div class="leg">
       <div class="route">鎌倉 <span class="arr">→</span> 鎌倉高校前 <span class="arr">→</span> 七里濱 <span class="arr">→</span> 江之島</div>
       <div class="how"><span class="badge b-eno">江ノ電</span>鎌倉站搭江ノ電一線串起：鎌倉高校前（海景平交道）、七里ヶ浜（bills）、江ノ島站。建議買 <b>江之電一日券</b>。</div>
       <div class="meta-line"><span>⏱ 各站 4–10 分</span><span>💴 一日券 ¥800</span><span>🌅 江之島看夕陽</span></div>
+      <a class="gmap-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=鎌倉駅&destination=江ノ島駅&travelmode=transit"><span class="ic">🚆</span>Google 大眾運輸路線</a>
     </div>
     <div class="leg">
       <div class="route">江之島 <span class="arr">→</span> Raku（片瀨海岸）</div>
       <div class="how"><span class="badge b-walk">步行</span>江之島一帶步行可達民宿；或江ノ電/小田急一站。</div>
       <div class="meta-line"><span>🚶 約 5–15 分</span></div>
+      <a class="gmap-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=江ノ島駅&destination=片瀬海岸+藤沢&travelmode=transit"><span class="ic">🚆</span>Google 大眾運輸路線</a>
     </div>
   </section>
 
@@ -118,16 +131,19 @@
       <div class="route">片瀨海岸 <span class="arr">→</span> 鎌倉（熊見亭）</div>
       <div class="how"><span class="badge b-eno">江ノ電</span>江ノ島站搭江ノ電回鎌倉。</div>
       <div class="meta-line"><span>⏱ 約 25 分</span><span>💴 ¥260（或續用一日券）</span></div>
+      <a class="gmap-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=片瀬海岸+藤沢&destination=鎌倉駅&travelmode=transit"><span class="ic">🚆</span>Google 大眾運輸路線</a>
     </div>
     <div class="leg">
       <div class="route">鎌倉 <span class="arr">→</span> 江之島散策 <span class="arr">→</span> 七里濱</div>
       <div class="how"><span class="badge b-eno">江ノ電</span>沿線往返，續逛江之島、Espresso D Works（七里ヶ浜）。</div>
       <div class="meta-line"><span>⏱ 各站數分</span><span>💴 一日券最划算</span></div>
+      <a class="gmap-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=鎌倉駅&destination=七里ヶ浜駅&travelmode=transit"><span class="ic">🚆</span>Google 大眾運輸路線</a>
     </div>
     <div class="leg">
       <div class="route">七里濱 / 江之島 <span class="arr">→</span> 小町通（鎌倉）</div>
       <div class="how"><span class="badge b-eno">江ノ電</span>回鎌倉站，小町通就在站旁。</div>
       <div class="meta-line"><span>⏱ 約 10–25 分</span></div>
+      <a class="gmap-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=七里ヶ浜駅&destination=小町通り&travelmode=transit"><span class="ic">🚆</span>Google 大眾運輸路線</a>
     </div>
   </section>
 
@@ -138,16 +154,19 @@
       <div class="route">江之島／片瀨海岸 <span class="arr">→</span> 銀座</div>
       <div class="how"><span class="badge b-odk">小田急江ノ島線</span><span class="badge b-jr">JR 東海道線</span>片瀨江ノ島→藤沢（小田急約 7 分）→ JR 東海道線至新橋 →（步行或東京メトロ銀座線一站到銀座）。</div>
       <div class="meta-line"><span>⏱ 約 75–90 分</span><span>💴 約 ¥1,100</span><span>🔁 換乘 1–2 次</span></div>
+      <a class="gmap-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=片瀬江ノ島駅&destination=銀座駅&travelmode=transit"><span class="ic">🚆</span>Google 大眾運輸路線</a>
     </div>
     <div class="leg">
       <div class="route">銀座 <span class="arr">→</span> 築地場外市場</div>
       <div class="how"><span class="badge b-walk">步行</span>或東京メトロ日比谷線銀座→築地一站。</div>
       <div class="meta-line"><span>🚶 約 12 分</span><span>🚇 1 站</span></div>
+      <a class="gmap-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=銀座駅&destination=築地場外市場&travelmode=transit"><span class="ic">🚆</span>Google 大眾運輸路線</a>
     </div>
     <div class="leg">
       <div class="route">築地 <span class="arr">→</span> 台場</div>
       <div class="how"><span class="badge b-metro">大江戶線+百合海鷗號</span>築地市場→汐留，轉 <b>百合海鷗號 (Yurikamome)</b> 過彩虹大橋到台場（海景路線推薦）。</div>
       <div class="meta-line"><span>⏱ 約 30–40 分</span><span>💴 約 ¥500–650</span><span>🎡 摩天輪夜景</span></div>
+      <a class="gmap-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=築地場外市場&destination=お台場海浜公園駅&travelmode=transit"><span class="ic">🚆</span>Google 大眾運輸路線</a>
     </div>
   </section>
 
@@ -158,21 +177,25 @@
       <div class="route">飯店 <span class="arr">→</span> 代官山</div>
       <div class="how"><span class="badge b-jr">JR 山手線</span>至澀谷，轉東急東橫線一站到代官山（或澀谷步行 15 分）。</div>
       <div class="meta-line"><span>⏱ 視出發地</span><span>🚇 代官山站徒步即達</span></div>
+      <a class="gmap-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=上野駅&destination=代官山駅&travelmode=transit"><span class="ic">🚆</span>Google 大眾運輸路線</a>
     </div>
     <div class="leg">
       <div class="route">代官山 <span class="arr">→</span> 澀谷 SKY</div>
       <div class="how"><span class="badge b-odk">東急東橫線</span>一站到澀谷，SKY 在澀谷 Scramble Square。<span class="badge b-walk">步行</span>約 15 分亦可。</div>
       <div class="meta-line"><span>⏱ 約 5–15 分</span><span>🌇 日落前上去</span></div>
+      <a class="gmap-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=代官山駅&destination=渋谷スクランブルスクエア&travelmode=transit"><span class="ic">🚆</span>Google 大眾運輸路線</a>
     </div>
     <div class="leg">
       <div class="route">澀谷 <span class="arr">→</span> 下北澤</div>
       <div class="how"><span class="badge b-odk">京王井之頭線</span>澀谷直達下北澤。</div>
       <div class="meta-line"><span>⏱ 約 5 分</span><span>💴 ¥140</span></div>
+      <a class="gmap-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=渋谷駅&destination=下北沢駅&travelmode=transit"><span class="ic">🚆</span>Google 大眾運輸路線</a>
     </div>
     <div class="leg">
       <div class="route">下北澤 <span class="arr">→</span> 六本木新城展望台</div>
       <div class="how"><span class="badge b-odk">小田急→千代田線</span>或回澀谷轉東京メトロ；亦可澀谷搭都營/日比谷線往六本木。</div>
       <div class="meta-line"><span>⏱ 約 25–35 分</span><span>🌹 夜景浪漫</span><span>＊Stellar Garden 在六本木一帶（午餐）</span></div>
+      <a class="gmap-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=下北沢駅&destination=六本木ヒルズ展望台&travelmode=transit"><span class="ic">🚆</span>Google 大眾運輸路線</a>
     </div>
   </section>
 
@@ -183,36 +206,43 @@
       <div class="route">飯店 <span class="arr">→</span> teamLab Borderless（麻布台）<span class="badge" style="background:#4d96ff;margin-left:4px;">8:30</span></div>
       <div class="how"><span class="badge b-metro">東京メトロ日比谷線</span>神谷町站徒步至麻布台之丘；準時抵達預約時段。</div>
       <div class="meta-line"><span>🎟️ 已購票 8:30</span></div>
+      <a class="gmap-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=上野駅&destination=teamLab+Borderless+麻布台&travelmode=transit"><span class="ic">🚆</span>Google 大眾運輸路線</a>
     </div>
     <div class="leg">
       <div class="route">麻布台 <span class="arr">→</span> 上野公園</div>
       <div class="how"><span class="badge b-metro">日比谷線</span>神谷町→上野；或轉銀座線到上野。</div>
       <div class="meta-line"><span>⏱ 約 25–30 分</span></div>
+      <a class="gmap-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=麻布台ヒルズ&destination=上野公園&travelmode=transit"><span class="ic">🚆</span>Google 大眾運輸路線</a>
     </div>
     <div class="leg">
       <div class="route">上野 <span class="arr">→</span> 秋葉原 <span class="arr">→</span> 淺草</div>
       <div class="how"><span class="badge b-jr">JR 山手/京濱東北線</span>上野→秋葉原（約 4 分）。<span class="badge b-metro">銀座線</span>淺草線/銀座線往淺草。</div>
       <div class="meta-line"><span>⏱ 上野→秋葉原 4 分</span><span>⏱ 秋葉原→淺草 約 15 分</span></div>
+      <a class="gmap-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=上野駅&destination=浅草寺&travelmode=transit&waypoints=秋葉原駅"><span class="ic">🚆</span>Google 大眾運輸路線</a>
     </div>
     <div class="leg">
       <div class="route">淺草 <span class="arr">→</span> 摩利支天德大寺（御徒町）</div>
       <div class="how"><span class="badge b-metro">銀座線</span>淺草→上野/末廣町，德大寺在御徒町 ameyoko 旁。</div>
       <div class="meta-line"><span>⏱ 約 12 分</span></div>
+      <a class="gmap-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=浅草寺&destination=摩利支天徳大寺&travelmode=transit"><span class="ic">🚆</span>Google 大眾運輸路線</a>
     </div>
     <div class="leg">
       <div class="route">御徒町 <span class="arr">→</span> 豪德寺（世田谷）</div>
       <div class="how"><span class="badge b-jr">JR</span><span class="badge b-odk">小田急</span>較遠：JR 至新宿轉小田急到豪德寺站（或乘換案內查最短）。<b>⚠️ 此段最長</b>。</div>
       <div class="meta-line"><span>⏱ 約 45–60 分</span><span>🐱 招財貓</span></div>
+      <a class="gmap-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=御徒町駅&destination=豪徳寺&travelmode=transit"><span class="ic">🚆</span>Google 大眾運輸路線</a>
     </div>
     <div class="leg">
       <div class="route">豪德寺 <span class="arr">→</span> 東京鐵塔・芝公園</div>
       <div class="how"><span class="badge b-odk">小田急→</span><span class="badge b-metro">大江戶線</span>新宿轉都營大江戶線至赤羽橋（東京鐵塔最近站）。</div>
       <div class="meta-line"><span>⏱ 約 40–50 分</span></div>
+      <a class="gmap-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=豪徳寺&destination=東京タワー&travelmode=transit"><span class="ic">🚆</span>Google 大眾運輸路線</a>
     </div>
     <div class="leg">
       <div class="route">東京（市區）<span class="arr">→</span> 成田東武機場酒店</div>
       <div class="how"><span class="badge b-nex">Skyliner / N'EX</span>京成上野/日暮里搭 Skyliner，或東京站 N'EX 至成田機場，飯店有接駁。</div>
       <div class="meta-line"><span>⏱ 約 60–90 分</span><span>💴 ¥1,300–2,570</span><span>🏨 末晚</span></div>
+      <a class="gmap-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=東京タワー&destination=成田東武ホテルエアポート&travelmode=transit"><span class="ic">🚆</span>Google 大眾運輸路線</a>
     </div>
   </section>
 
@@ -223,6 +253,7 @@
       <div class="route">成田東武機場酒店 <span class="arr">→</span> 成田機場</div>
       <div class="how"><span class="badge b-bus">飯店接駁巴士</span>東武機場酒店有免費接駁巴士到各航廈，約 10 分。</div>
       <div class="meta-line"><span>🚌 免費接駁</span><span>✈ 09:15 離境（提早 2–3 小時抵達）</span></div>
+      <a class="gmap-btn" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=成田東武ホテルエアポート&destination=成田空港&travelmode=transit"><span class="ic">🚆</span>Google 大眾運輸路線</a>
     </div>
   </section>
 
